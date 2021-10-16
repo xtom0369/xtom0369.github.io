@@ -1167,11 +1167,10 @@ pre .javascript .function {
   display: inline-block;
 }
 .site-author-image {
-  border: 1px solid #eee;
   display: block;
   margin: 0 auto;
   max-width: 120px;
-  padding: 1px;
+  padding: 0px;
   border-radius: 50%;
 }
 .site-author-name {
@@ -1200,7 +1199,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #0e8b1f;
+  background: #d1ffff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
