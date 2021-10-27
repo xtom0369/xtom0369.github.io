@@ -108,7 +108,7 @@
 <span id="more"></span>
 
 <h2 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h2><p>举个简单的例子，这是一个宝箱的Animator</p>
-<p><img src="/.io//1.png" alt="简单例子"></p>
+<p><img src="/.github//1.png" alt="简单例子"></p>
 <p>例子中的Animator初始状态为<strong>idle</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Open</strong></font></span>则跳转到状态<strong>open</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>则跳转到状态<strong>Idle</strong>。</p>
 <p>由于Trigger是<strong>消耗型</strong>参数，所以参数只有在使用后才会发生重置。所以以下的两种写法最后都会得到相同的结果。</p>
 <ul>
