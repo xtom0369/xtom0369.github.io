@@ -6,7 +6,7 @@
   <link href="https://xtom0369.github.io/atom.xml" rel="self"/>
   
   <link href="https://xtom0369.github.io/"/>
-  <updated>2021-10-27T14:33:18.849Z</updated>
+  <updated>2021-10-27T15:49:13.723Z</updated>
   <id>https://xtom0369.github.io/</id>
   
   <author>
@@ -18,10 +18,10 @@
   
   <entry>
     <title>Trigger的特点</title>
-    <link href="https://xtom0369.github.io/2021/10/26/2021-10-26-Trigger%E7%9A%84%E7%89%B9%E7%82%B9/"/>
-    <id>https://xtom0369.github.io/2021/10/26/2021-10-26-Trigger%E7%9A%84%E7%89%B9%E7%82%B9/</id>
+    <link href="https://xtom0369.github.io/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/"/>
+    <id>https://xtom0369.github.io/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/</id>
     <published>2021-10-26T15:23:44.000Z</published>
-    <updated>2021-10-27T14:33:18.849Z</updated>
+    <updated>2021-10-27T15:49:13.723Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Trigger的特点"><a href="#Trigger的特点" class="headerlink" title="Trigger的特点"></a>Trigger的特点</h2><p>众所周知，Animator的Trigger和Bool的区别是，Trigger是一次性触发判断，触发后会自动重置，而Bool是持久性变量，所以使用Trigger图的就是自动重置的功能。</p><span id="more"></span><h2 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h2><p>举个简单的例子，这是一个宝箱的Animator</p><p><img src="/.io//1.png" alt="简单例子"></p><p>例子中的Animator初始状态为<strong>idle</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Open</strong></font></span>则跳转到状态<strong>open</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>则跳转到状态<strong>Idle</strong>。</p><p>由于Trigger是<strong>消耗型</strong>参数，所以参数只有在使用后才会发生重置。所以以下的两种写法最后都会得到相同的结果。</p><ul><li>写法一</li></ul><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br></pre></td></tr></table></figure><ul><li>写法二</li></ul><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br></pre></td></tr></table></figure><p>原因是方法二设置<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器后并没有发生消耗，等到切换到open状态后才开始判断，消耗<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器，跳转到<strong>idle</strong>状态，得到和方法一一致的效果。</p>]]></content>
     

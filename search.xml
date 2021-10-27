@@ -103,7 +103,7 @@
   </entry>
   <entry>
     <title>Trigger的特点</title>
-    <url>/2021/10/26/2021-10-26-Trigger%E7%9A%84%E7%89%B9%E7%82%B9/</url>
+    <url>/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/</url>
     <content><![CDATA[<h2 id="Trigger的特点"><a href="#Trigger的特点" class="headerlink" title="Trigger的特点"></a>Trigger的特点</h2><p>众所周知，Animator的Trigger和Bool的区别是，Trigger是一次性触发判断，触发后会自动重置，而Bool是持久性变量，所以使用Trigger图的就是自动重置的功能。</p>
 <span id="more"></span>
 
