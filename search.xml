@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Trigger的特点</title>
-    <url>/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/</url>
-    <content><![CDATA[<h2 id="Trigger的特点"><a href="#Trigger的特点" class="headerlink" title="Trigger的特点"></a>Trigger的特点</h2><p>众所周知，Animator的Trigger和Bool的区别是，Trigger是一次性触发判断，触发后会自动重置，而Bool是持久性变量，所以使用Trigger图的就是自动重置的功能。</p>
-<span id="more"></span>
-
-<h2 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h2><p>举个简单的例子，这是一个宝箱的Animator</p>
-<p><img src="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/1.png" alt="简单例子"></p>
-<p>例子中的Animator初始状态为<strong>idle</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Open</strong></font></span>则跳转到状态<strong>open</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>则跳转到状态<strong>Idle</strong>。</p>
-<p>由于Trigger是<strong>消耗型</strong>参数，所以参数只有在使用后才会发生重置。所以以下的两种写法最后都会得到相同的结果。</p>
-<ul>
-<li>写法一</li>
-</ul>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>写法二</li>
-</ul>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>原因是方法二设置<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器后并没有发生消耗，等到切换到open状态后才开始判断，消耗<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器，跳转到<strong>idle</strong>状态，得到和方法一一致的效果。</p>
-]]></content>
-      <categories>
-        <category>Unity</category>
-        <category>Animator</category>
-      </categories>
-      <tags>
-        <tag>Unity</tag>
-        <tag>Animator</tag>
-        <tag>Trigger</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>开发装机环境</title>
     <url>/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><p>写这样一个文档是因为电脑总会因为某些问题而面临重新安装开发环境，包括但不限于</p>
@@ -134,13 +102,45 @@
       </tags>
   </entry>
   <entry>
-    <title>���BulletPhysics</title>
-    <url>/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/</url>
-    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="ΪʲoҪ�����������棿"><a href="#ΪʲoҪ�����������棿" class="headerlink" title="ΪʲôҪ�����������棿"></a>ΪʲôҪ�����������棿</h3><p>������������<strong>����ͬ��</strong>��</p>
-<p>����ͨ�õ�����ͬ��������<strong>֡ͬ��</strong>��<strong>״̬ͬ��</strong>��״̬ͬ����Ȼ��Ҫ�ڷ�������������֡ͬ����������ֻ�ܿͻ��ˣ�������ֻ����ת�������ʵ��������һ��֡ͬ����ϷҲ����ô���ģ������Ǵ����������⣬һ�ǲ�ͬƽ̨���ڲ�ͬ���Ŀ��ܣ���Ϊ���������������ڸ������㣬��ͬƽ̨������������һ�£������������ʹ���˽ض���λС������ķ�������ͬ�����ֵĸ��ʴ��ؽ����ˣ�������ֻ�ܿͻ����޷��Ϻõ���У����߷����ס�</p>
+    <title>Trigger的特点</title>
+    <url>/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="Trigger的特点"><a href="#Trigger的特点" class="headerlink" title="Trigger的特点"></a>Trigger的特点</h2><p>众所周知，Animator的Trigger和Bool的区别是，Trigger是一次性触发判断，触发后会自动重置，而Bool是持久性变量，所以使用Trigger图的就是自动重置的功能。</p>
 <span id="more"></span>
 
-<h3 id="Ϊʲo��Bullet��"><a href="#Ϊʲo��Bullet��" class="headerlink" title="Ϊʲô��Bullet��"></a>Ϊʲô��Bullet��</h3><p>��Ҫ����Ŀ�������Bullet����һ����ʹ�þ��飬����Bullet���ŵ�����Ŀ�ṹ��Լ򵥣����뷽�㡣��Ȼunity�õ���<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>�������л���Ҳ�ῪPhyX�Ŀӡ�</p>
+<h2 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h2><p>举个简单的例子，这是一个宝箱的Animator</p>
+<p><img src="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/1.png" alt="简单例子"></p>
+<p>例子中的Animator初始状态为<strong>idle</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Open</strong></font></span>则跳转到状态<strong>open</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>则跳转到状态<strong>Idle</strong>。</p>
+<p>由于Trigger是<strong>消耗型</strong>参数，所以参数只有在使用后才会发生重置。所以以下的两种写法最后都会得到相同的结果。</p>
+<ul>
+<li>写法一</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写法二</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>原因是方法二设置<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器后并没有发生消耗，等到切换到open状态后才开始判断，消耗<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器，跳转到<strong>idle</strong>状态，得到和方法一一致的效果。</p>
+]]></content>
+      <categories>
+        <category>Unity</category>
+        <category>Animator</category>
+      </categories>
+      <tags>
+        <tag>Unity</tag>
+        <tag>Animator</tag>
+        <tag>Trigger</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>入坑BulletPhysics</title>
+    <url>/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/</url>
+    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<strong>网络同步</strong>。</p>
+<p>当下通用的网络同步方案有<strong>帧同步</strong>和<strong>状态同步</strong>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
+<span id="more"></span>
+
+<h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然unity用的是<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p>
 <h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2>]]></content>
       <categories>
         <category>physics</category>
