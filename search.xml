@@ -133,4 +133,23 @@
         <tag>开发环境</tag>
       </tags>
   </entry>
+  <entry>
+    <title>���BulletPhysics</title>
+    <url>/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/</url>
+    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="ΪʲoҪ�����������棿"><a href="#ΪʲoҪ�����������棿" class="headerlink" title="ΪʲôҪ�����������棿"></a>ΪʲôҪ�����������棿</h3><p>������������<strong>����ͬ��</strong>��</p>
+<p>����ͨ�õ�����ͬ��������<strong>֡ͬ��</strong>��<strong>״̬ͬ��</strong>��״̬ͬ����Ȼ��Ҫ�ڷ�������������֡ͬ����������ֻ�ܿͻ��ˣ�������ֻ����ת�������ʵ��������һ��֡ͬ����ϷҲ����ô���ģ������Ǵ����������⣬һ�ǲ�ͬƽ̨���ڲ�ͬ���Ŀ��ܣ���Ϊ���������������ڸ������㣬��ͬƽ̨������������һ�£������������ʹ���˽ض���λС������ķ�������ͬ�����ֵĸ��ʴ��ؽ����ˣ�������ֻ�ܿͻ����޷��Ϻõ���У����߷����ס�</p>
+<span id="more"></span>
+
+<h3 id="Ϊʲo��Bullet��"><a href="#Ϊʲo��Bullet��" class="headerlink" title="Ϊʲô��Bullet��"></a>Ϊʲô��Bullet��</h3><p>��Ҫ����Ŀ�������Bullet����һ����ʹ�þ��飬����Bullet���ŵ�����Ŀ�ṹ��Լ򵥣����뷽�㡣��Ȼunity�õ���<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>�������л���Ҳ�ῪPhyX�Ŀӡ�</p>
+<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2>]]></content>
+      <categories>
+        <category>physics</category>
+        <category>unity</category>
+      </categories>
+      <tags>
+        <tag>bullet physics</tag>
+        <tag>physics</tag>
+        <tag>unity</tag>
+      </tags>
+  </entry>
 </search>

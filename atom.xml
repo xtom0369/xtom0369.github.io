@@ -6,7 +6,7 @@
   <link href="https://xtom0369.github.io/atom.xml" rel="self"/>
   
   <link href="https://xtom0369.github.io/"/>
-  <updated>2021-10-28T02:38:04.054Z</updated>
+  <updated>2021-10-30T09:34:14.658Z</updated>
   <id>https://xtom0369.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>���BulletPhysics</title>
+    <link href="https://xtom0369.github.io/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/"/>
+    <id>https://xtom0369.github.io/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/</id>
+    <published>2021-10-28T14:38:04.000Z</published>
+    <updated>2021-10-30T09:34:14.658Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="ΪʲoҪ�����������棿"><a href="#ΪʲoҪ�����������棿" class="headerlink" title="ΪʲôҪ�����������棿"></a>ΪʲôҪ�����������棿</h3><p>������������<strong>����ͬ��</strong>��</p><p>����ͨ�õ�����ͬ��������<strong>֡ͬ��</strong>��<strong>״̬ͬ��</strong>��״̬ͬ����Ȼ��Ҫ�ڷ�������������֡ͬ����������ֻ�ܿͻ��ˣ�������ֻ����ת�������ʵ��������һ��֡ͬ����ϷҲ����ô���ģ������Ǵ����������⣬һ�ǲ�ͬƽ̨���ڲ�ͬ���Ŀ��ܣ���Ϊ���������������ڸ������㣬��ͬƽ̨������������һ�£������������ʹ���˽ض���λС������ķ�������ͬ�����ֵĸ��ʴ��ؽ����ˣ�������ֻ�ܿͻ����޷��Ϻõ���У����߷����ס�</p><span id="more"></span><h3 id="Ϊʲo��Bullet��"><a href="#Ϊʲo��Bullet��" class="headerlink" title="Ϊʲô��Bullet��"></a>Ϊʲô��Bullet��</h3><p>��Ҫ����Ŀ�������Bullet����һ����ʹ�þ��飬����Bullet���ŵ�����Ŀ�ṹ��Լ򵥣����뷽�㡣��Ȼunity�õ���<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>�������л���Ҳ�ῪPhyX�Ŀӡ�</p><h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;Why&quot;&gt;&lt;a href=&quot;#Why&quot; class=&quot;headerlink&quot; title=&quot;Why&quot;&gt;&lt;/a&gt;&lt;font color=&quot;#64EBC1&quot;&gt;Why&lt;/font&gt;&lt;/h2&gt;&lt;h3 id=&quot;ΪʲoҪ�����������棿&quot;&gt;&lt;a href=&quot;#ΪʲoҪ�����������棿&quot; class=&quot;headerlink&quot; title=&quot;ΪʲôҪ�����������棿&quot;&gt;&lt;/a&gt;ΪʲôҪ�����������棿&lt;/h3&gt;&lt;p&gt;������������&lt;strong&gt;����ͬ��&lt;/strong&gt;��&lt;/p&gt;
+&lt;p&gt;����ͨ�õ�����ͬ��������&lt;strong&gt;֡ͬ��&lt;/strong&gt;��&lt;strong&gt;״̬ͬ��&lt;/strong&gt;��״̬ͬ����Ȼ��Ҫ�ڷ�������������֡ͬ����������ֻ�ܿͻ��ˣ�������ֻ����ת�������ʵ��������һ��֡ͬ����ϷҲ����ô���ģ������Ǵ����������⣬һ�ǲ�ͬƽ̨���ڲ�ͬ���Ŀ��ܣ���Ϊ���������������ڸ������㣬��ͬƽ̨������������һ�£������������ʹ���˽ض���λС������ķ�������ͬ�����ֵĸ��ʴ��ؽ����ˣ�������ֻ�ܿͻ����޷��Ϻõ���У����߷����ס�&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="physics" scheme="https://xtom0369.github.io/categories/physics/"/>
+    
+    <category term="unity" scheme="https://xtom0369.github.io/categories/physics/unity/"/>
+    
+    
+    <category term="bullet physics" scheme="https://xtom0369.github.io/tags/bullet-physics/"/>
+    
+    <category term="physics" scheme="https://xtom0369.github.io/tags/physics/"/>
+    
+    <category term="unity" scheme="https://xtom0369.github.io/tags/unity/"/>
+    
+  </entry>
   
   <entry>
     <title>Trigger的特点</title>
