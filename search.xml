@@ -136,8 +136,8 @@
   <entry>
     <title>入坑BulletPhysics</title>
     <url>/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/</url>
-    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<strong>网络同步</strong>。</p>
-<p>当下通用的网络同步方案有<strong>帧同步</strong>和<strong>状态同步</strong>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
+    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
+<p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
 <span id="more"></span>
 
 <h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然unity用的是<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p>
@@ -156,7 +156,7 @@
 <p> ……</p>
 </li>
 </ol>
-<h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><ol>
+<h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><h3 id="如何进行Bullet学习？"><a href="#如何进行Bullet学习？" class="headerlink" title="如何进行Bullet学习？"></a>如何进行Bullet学习？</h3><ol>
 <li>文档和资料</li>
 </ol>
 <ul>
