@@ -134,8 +134,8 @@
       </tags>
   </entry>
   <entry>
-    <title>入坑BulletPhysics</title>
-    <url>/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/</url>
+    <title>三大物理引擎之Bullet</title>
+    <url>/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/</url>
     <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
 <p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
 <span id="more"></span>
@@ -174,7 +174,7 @@
 </li>
 <li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
 <p>bullet的github仓库，根据教程编译出vs工程，设置启动项目，运行VS即可看到demo工程。</p>
-<p><img src="/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/Demo.png"></p>
+<p><img src="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png"></p>
 </li>
 </ul>
 <ol start="3">
