@@ -141,7 +141,53 @@
 <span id="more"></span>
 
 <h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然unity用的是<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p>
-<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2>]]></content>
+<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="学习Bullet的什么？"><a href="#学习Bullet的什么？" class="headerlink" title="学习Bullet的什么？"></a>学习Bullet的什么？</h3><ol>
+<li><p>通用形状的碰撞体实现</p>
+</li>
+<li><p>碰撞检测实现</p>
+</li>
+<li><p>刚体实现</p>
+</li>
+<li><p>柔体实现</p>
+</li>
+<li><p>IK实现</p>
+</li>
+<li><p>优化手段</p>
+<p> ……</p>
+</li>
+</ol>
+<h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><ol>
+<li>文档和资料</li>
+</ol>
+<ul>
+<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/BulletQuickstart.pdf">快速使用文档</a></p>
+</li>
+<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/Bullet_User_Manual.pdf">用户手册</a> </p>
+</li>
+</ul>
+<ol start="2">
+<li>Demo</li>
+</ol>
+<ul>
+<li><p><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">BulletPhysicsForUnity</a></p>
+<p>这是一个Unity版的Bullet插件，有<a href="https://github.com/Phong13/BulletSharpUnity3d">github</a>版本，插件里将大量的C++接口暴露到了C#层，所以可以学到很多Bullet的概念，以及基础功能的实现。另外里面的bullet的dll是使用另一个github工程<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>编译出来的，更底层的代码还是得看编译工程。</p>
+</li>
+<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
+<p>bullet的github仓库，根据教程编译出vs工程，设置启动项目，运行VS即可看到demo工程。</p>
+<p><img src="/2021/10/28/%E5%85%A5%E5%9D%91BulletPhysics/Demo.png"></p>
+</li>
+</ul>
+<ol start="3">
+<li>源码</li>
+</ol>
+<ul>
+<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
+<p>撸完1和2，对bullet的使用也大概有个底了，就可以直接撸源码了。</p>
+</li>
+</ul>
+<pre><code>未完待续 ...
+</code></pre>
+]]></content>
       <categories>
         <category>physics</category>
         <category>unity</category>
