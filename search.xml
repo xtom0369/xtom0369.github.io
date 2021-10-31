@@ -174,6 +174,8 @@
     <title>BulletPhysicsForUnity下载和安装</title>
     <url>/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><h3 id="BulletPhysicsForUnity是什么？"><a href="#BulletPhysicsForUnity是什么？" class="headerlink" title="BulletPhysicsForUnity是什么？"></a>BulletPhysicsForUnity是什么？</h3><p>BulletPhysicsForUnity是Bullet物理引擎在Unity上的插件。</p>
+<span id="more"></span>
+
 <h3 id="BulletPhysicsForUnity要下载哪个版本？"><a href="#BulletPhysicsForUnity要下载哪个版本？" class="headerlink" title="BulletPhysicsForUnity要下载哪个版本？"></a>BulletPhysicsForUnity要下载哪个版本？</h3><p>网上一共可以找到两个版本，分别是<a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore版本</a>和<a href="https://github.com/Phong13/BulletSharpUnity3d">github版本</a>。两个版本其实差不多，github版本可以看到最新的仓库，当然还有最新的bug。这两个仓库的共同点是都很多年没维护了。</p>
 <h3 id="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"><a href="#BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？" class="headerlink" title="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"></a>BulletPhysicsForUnity和<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>有什么关系？</h3><p>BulletSharpPInvoke是BulletPhysicsForUnity中C++ 源码的编译库。也就是说BulletPhysicsForUnity中只包含了Bullet的编译库以及暴露到C#的接口，不包含Bullet的源代码，但是这并不妨碍入门。</p>
 <h3 id="BulletPhysicsForUnity可以直接商用么？"><a href="#BulletPhysicsForUnity可以直接商用么？" class="headerlink" title="BulletPhysicsForUnity可以直接商用么？"></a>BulletPhysicsForUnity可以直接商用么？</h3><p>不确定，但当前存在的问题是接口的封装和Unity原生的相比比较原始，另外这种插件一般都需要另外做性能优化，因为游戏里的样本量和demo不是一个数量级。</p>
