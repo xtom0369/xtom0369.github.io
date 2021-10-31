@@ -194,6 +194,110 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="xtom">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xtom's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">BulletPhysicsForUnity下载和安装</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-10-31 17:41:01 / 修改时间：18:57:09" itemprop="dateCreated datePublished" datetime="2021-10-31T17:41:01+08:00">2021-10-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/physics/" itemprop="url" rel="index"><span itemprop="name">physics</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/physics/unity/" itemprop="url" rel="index"><span itemprop="name">unity</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" class="post-meta-item leancloud_visitors" data-flag-title="BulletPhysicsForUnity下载和安装" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><h3 id="BulletPhysicsForUnity是什么？"><a href="#BulletPhysicsForUnity是什么？" class="headerlink" title="BulletPhysicsForUnity是什么？"></a>BulletPhysicsForUnity是什么？</h3><p>BulletPhysicsForUnity是Bullet物理引擎在Unity上的插件。</p>
+<h3 id="BulletPhysicsForUnity要下载哪个版本？"><a href="#BulletPhysicsForUnity要下载哪个版本？" class="headerlink" title="BulletPhysicsForUnity要下载哪个版本？"></a>BulletPhysicsForUnity要下载哪个版本？</h3><p>网上一共可以找到两个版本，分别是<a target="_blank" rel="noopener" href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore版本</a>和<a target="_blank" rel="noopener" href="https://github.com/Phong13/BulletSharpUnity3d">github版本</a>。两个版本其实差不多，github版本可以看到最新的仓库，当然还有最新的bug。这两个仓库的共同点是都很多年没维护了。</p>
+<h3 id="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"><a href="#BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？" class="headerlink" title="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"></a>BulletPhysicsForUnity和<a target="_blank" rel="noopener" href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>有什么关系？</h3><p>BulletSharpPInvoke是BulletPhysicsForUnity中C++ 源码的编译库。也就是说BulletPhysicsForUnity中只包含了Bullet的编译库以及暴露到C#的接口，不包含Bullet的源代码，但是这并不妨碍入门。</p>
+<h3 id="BulletPhysicsForUnity可以直接商用么？"><a href="#BulletPhysicsForUnity可以直接商用么？" class="headerlink" title="BulletPhysicsForUnity可以直接商用么？"></a>BulletPhysicsForUnity可以直接商用么？</h3><p>不确定，但当前存在的问题是接口的封装和Unity原生的相比比较原始，另外这种插件一般都需要另外做性能优化，因为游戏里的样本量和demo不是一个数量级。</p>
+<h2 id="下载和安装"><a href="#下载和安装" class="headerlink" title="下载和安装"></a><font color="#64EBC1">下载和安装</font></h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore仓库</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Phong13/BulletSharpUnity3d">github仓库</a></li>
+</ol>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>两个仓库都是创建一个Unity空工程然后选1的把资源Import进工程，选2的把仓库放到Assets目录下即可。</p>
+<p>导入后选择Assets\Examples\Scenes\ExampleMenu场景，启动即可查看Demo效果。</p>
+<p><img src="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/1.png"></p>
+<p>至此，BulletPhysicsForUnity就下载安装完成。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -225,7 +329,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-30 23:51:10" itemprop="dateModified" datetime="2021-10-30T23:51:10+08:00">2021-10-30</time>
+                <time title="修改时间：2021-10-31 18:57:16" itemprop="dateModified" datetime="2021-10-31T18:57:16+08:00">2021-10-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -571,7 +675,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
