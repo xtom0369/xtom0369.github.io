@@ -175,7 +175,6 @@
 <li><p><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">BulletPhysicsForUnity</a></p>
 <p>这是一个Unity版的Bullet插件，有<a href="https://github.com/Phong13/BulletSharpUnity3d">github</a>版本，插件里将大量的C++接口暴露到了C#层，所以可以学到很多Bullet的概念，以及基础功能的实现。另外里面的bullet的dll是使用另一个github工程<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>编译出来的，更底层的代码还是得看编译工程。</p>
 <ul>
-<li><a href="/2021/11/01/BulletPhysicsForUnity%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/" title="官方文档">官方文档</a></li>
 <li><a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" title="下载和安装">下载和安装</a></li>
 </ul>
 </li>
