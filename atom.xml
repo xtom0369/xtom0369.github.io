@@ -6,7 +6,7 @@
   <link href="https://xtom0369.github.io/atom.xml" rel="self"/>
   
   <link href="https://xtom0369.github.io/"/>
-  <updated>2021-11-02T14:30:58.209Z</updated>
+  <updated>2021-11-08T14:02:09.550Z</updated>
   <id>https://xtom0369.github.io/</id>
   
   <author>
@@ -15,6 +15,56 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AStarPathfinding学习笔记（一）基本用法</title>
+    <link href="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/"/>
+    <id>https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</id>
+    <published>2021-11-07T10:21:15.000Z</published>
+    <updated>2021-11-08T14:02:09.550Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p>AStarPathfinding是最热门的寻路插件（下面简称<font color="#F46224">AStarPath</font>），对标的是Unity的<a href="https://docs.unity.cn/cn/2019.4/Manual/Navigation.html">Navigation</a>，但是相比之下更加灵活，不仅支持多种不同的图，还能对图进行局部调整。</p><h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a><font color="#64EBC1">正文</font></h2><h3 id="下载和安装"><a href="#下载和安装" class="headerlink" title="下载和安装"></a>下载和安装</h3><p>AStarPath可直接到<a href="https://arongranberg.com/astar/download">官网下载</a></p><p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/%E4%B8%8B%E8%BD%BD%E7%89%88%E6%9C%AC.png" alt="下载版本"></p><p>官网分三个版本，免费版、Pro版和Beta版，可以在这里对比<a href="https://arongranberg.com/astar/freevspro">不同版本之间的差异</a>，一个主要的差异还是免费版用不了Recast Graph，这个比较蛋疼，Recast相当于Navigation的自动生成路径，下面的文章基于4.2.15的Pro版本。</p><p>安装就直接创建一个Unity工程把插件的unitypackage导入即可。</p><h3 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h3><ul><li>Graph</li></ul><p>AStarPath的核心概念是Graph，Graph可以理解为一张自定义生成导航数据的设置，注意是设置不是数据，生成的烘焙数据实际上在另一个地方。按照<a href="https://arongranberg.com/astar/docs/getstarted.html">官方的说法</a>一个场景中最多可以有256张图，为了保证他足够的简单以及较好的性能，一般只用1~2个Graph来实现功能。</p><h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>为了防止枯燥还是直接上官方例子，主要是围绕插件支持的五种Graph，分别取一个例子。</p><ul><li>Recast Graph</li></ul><p>场景ExampleScenes\Example3_Recast_Navmesh1中是Recast Graph的简单用法。</p><p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/RecastGraph.png" alt="RecastGraph"></p><p>其中想要生成导航路径最核心的是挂在A*节点上的Pathfinder组件，对应的脚本为AstarPath，添加组件的菜单为<strong>Component -&gt; pathfinding -&gt; pathfinder</strong>。</p><p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/AddNewGraph.png" alt="RecastGraph"></p><p>点击pathfinder上的AddNewGraph会弹出可选择的Graph，选择Recast Graph。</p><p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/Scan.png" alt="Scan"></p><p>随后哪怕不修改默认设置，直接点击Scan按钮，就会生成一张默认的导航图（蓝色部分）。</p><ul><li><p>Grid Graph</p></li><li><p>Layered Grid Graph</p></li><li><p>Point Graph</p></li><li><p>NavMesh Graph</p></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;&lt;font color=&quot;#64EBC1&quot;&gt;前言&lt;/font&gt;&lt;/h2&gt;&lt;p&gt;AStarPathfinding是最热门的寻路插件（下面简称&lt;font color</summary>
+      
+    
+    
+    
+    <category term="Unity" scheme="https://xtom0369.github.io/categories/Unity/"/>
+    
+    <category term="Pathfinding" scheme="https://xtom0369.github.io/categories/Unity/Pathfinding/"/>
+    
+    
+    <category term="Unity" scheme="https://xtom0369.github.io/tags/Unity/"/>
+    
+    <category term="Pathfinding" scheme="https://xtom0369.github.io/tags/Pathfinding/"/>
+    
+    <category term="A*" scheme="https://xtom0369.github.io/tags/A/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【Unity引擎】寻路系统Navigation</title>
+    <link href="https://xtom0369.github.io/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/"/>
+    <id>https://xtom0369.github.io/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/</id>
+    <published>2021-11-05T14:29:03.000Z</published>
+    <updated>2021-11-05T14:32:44.916Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><img src="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/1.png" alt="1"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>BulletPhysicsForUnity官方文档</title>
@@ -38,13 +88,13 @@
     <category term="unity" scheme="https://xtom0369.github.io/categories/physics/unity/"/>
     
     
+    <category term="BulletPhysicsForUnity" scheme="https://xtom0369.github.io/tags/BulletPhysicsForUnity/"/>
+    
     <category term="bullet physics" scheme="https://xtom0369.github.io/tags/bullet-physics/"/>
     
     <category term="physics" scheme="https://xtom0369.github.io/tags/physics/"/>
     
     <category term="unity" scheme="https://xtom0369.github.io/tags/unity/"/>
-    
-    <category term="BulletPhysicsForUnity" scheme="https://xtom0369.github.io/tags/BulletPhysicsForUnity/"/>
     
   </entry>
   
@@ -66,7 +116,7 @@
     <link href="https://xtom0369.github.io/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/"/>
     <id>https://xtom0369.github.io/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/</id>
     <published>2021-10-31T09:41:01.000Z</published>
-    <updated>2021-11-01T15:40:08.999Z</updated>
+    <updated>2021-11-08T13:41:53.517Z</updated>
     
     <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><h3 id="BulletPhysicsForUnity是什么？"><a href="#BulletPhysicsForUnity是什么？" class="headerlink" title="BulletPhysicsForUnity是什么？"></a>BulletPhysicsForUnity是什么？</h3><p>BulletPhysicsForUnity是Bullet物理引擎在Unity上的插件。</p><span id="more"></span><h3 id="BulletPhysicsForUnity要下载哪个版本？"><a href="#BulletPhysicsForUnity要下载哪个版本？" class="headerlink" title="BulletPhysicsForUnity要下载哪个版本？"></a>BulletPhysicsForUnity要下载哪个版本？</h3><p>网上一共可以找到两个版本，分别是<a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore版本</a>和<a href="https://github.com/Phong13/BulletSharpUnity3d">github版本</a>。两个版本其实差不多，github版本可以看到最新的仓库，当然还有最新的bug。这两个仓库的共同点是都很多年没维护了。</p><h3 id="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"><a href="#BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？" class="headerlink" title="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"></a>BulletPhysicsForUnity和<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>有什么关系？</h3><p>BulletSharpPInvoke是BulletPhysicsForUnity中C++ 源码的编译库。也就是说BulletPhysicsForUnity中只包含了Bullet的编译库以及暴露到C#的接口，不包含Bullet的源代码，但是这并不妨碍入门。</p><h3 id="BulletPhysicsForUnity可以直接商用么？"><a href="#BulletPhysicsForUnity可以直接商用么？" class="headerlink" title="BulletPhysicsForUnity可以直接商用么？"></a>BulletPhysicsForUnity可以直接商用么？</h3><p>不确定，但当前存在的问题是接口的封装和Unity原生的相比比较原始，另外这种插件一般都需要另外做性能优化，因为游戏里的样本量和demo不是一个数量级。</p><h2 id="下载和安装"><a href="#下载和安装" class="headerlink" title="下载和安装"></a><font color="#64EBC1">下载和安装</font></h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><ol><li><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore仓库</a></li><li><a href="https://github.com/Phong13/BulletSharpUnity3d">github仓库</a></li></ol><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>两个仓库都是创建一个Unity空工程然后选1的把资源Import进工程，选2的把仓库放到Assets目录下即可。</p><p>导入后选择Assets\Examples\Scenes\ExampleMenu场景，启动即可查看Demo效果。</p><p><img src="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/1.png"></p><p>至此，BulletPhysicsForUnity就下载安装完成。</p>]]></content>
     
@@ -75,16 +125,16 @@
     
     
     
-    <category term="physics" scheme="https://xtom0369.github.io/categories/physics/"/>
+    <category term="Physics" scheme="https://xtom0369.github.io/categories/Physics/"/>
     
-    <category term="unity" scheme="https://xtom0369.github.io/categories/physics/unity/"/>
+    <category term="Unity" scheme="https://xtom0369.github.io/categories/Physics/Unity/"/>
     
     
-    <category term="bullet physics" scheme="https://xtom0369.github.io/tags/bullet-physics/"/>
+    <category term="Unity" scheme="https://xtom0369.github.io/tags/Unity/"/>
     
-    <category term="physics" scheme="https://xtom0369.github.io/tags/physics/"/>
+    <category term="Bullet Physics" scheme="https://xtom0369.github.io/tags/Bullet-Physics/"/>
     
-    <category term="unity" scheme="https://xtom0369.github.io/tags/unity/"/>
+    <category term="Physics" scheme="https://xtom0369.github.io/tags/Physics/"/>
     
     <category term="BulletPhysicsForUnity" scheme="https://xtom0369.github.io/tags/BulletPhysicsForUnity/"/>
     
@@ -95,7 +145,7 @@
     <link href="https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/"/>
     <id>https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/</id>
     <published>2021-10-28T14:38:04.000Z</published>
-    <updated>2021-11-04T14:55:51.090Z</updated>
+    <updated>2021-11-07T14:32:18.921Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p><p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p><span id="more"></span><h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然Unity用的是<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p><h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="学习Bullet的什么？"><a href="#学习Bullet的什么？" class="headerlink" title="学习Bullet的什么？"></a>学习Bullet的什么？</h3><ol><li><p>通用形状的碰撞体实现</p></li><li><p>碰撞检测实现</p></li><li><p>刚体实现</p></li><li><p>柔体实现</p></li><li><p>IK实现</p></li><li><p>优化手段</p><p> ……</p></li></ol><h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><h3 id="如何进行Bullet学习？"><a href="#如何进行Bullet学习？" class="headerlink" title="如何进行Bullet学习？"></a>如何进行Bullet学习？</h3><ol><li>文档和资料</li></ol><ul><li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/BulletQuickstart.pdf">快速使用文档</a></p></li><li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/Bullet_User_Manual.pdf">用户手册</a> </p><ul><li><a href="/2021/10/31/Bullet%E6%96%87%E6%A1%A3%E4%B9%8B%E3%80%8ABullet-User-Manual%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="《Bullet-User-Manual》阅读笔记">《Bullet-User-Manual》阅读笔记</a></li></ul></li></ul><ol start="2"><li>Demo</li></ol><ul><li><p><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">BulletPhysicsForUnity</a></p><p>这是一个Unity版的Bullet插件，有<a href="https://github.com/Phong13/BulletSharpUnity3d">github</a>版本，插件里将大量的C++接口暴露到了C#层，所以可以学到很多Bullet的概念，以及基础功能的实现。另外里面的bullet的dll是使用另一个github工程<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>编译出来的，更底层的代码还是得看编译工程。</p><ul><li><a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" title="下载和安装">下载和安装</a></li></ul></li></ul><ul><li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p><p>bullet的github仓库，根据教程编译出vs工程，设置启动项目，运行VS即可看到demo工程。</p><p><img src="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png"></p></li></ul><ol start="3"><li>源码</li></ol><ul><li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p><p>撸完1和2，对bullet的使用也大概有个底了，就可以直接撸源码了。</p></li></ul><ol start="4"><li>参考资料</li></ol><ul><li><a href="https://www.cnblogs.com/liangliangh/p/3576353.html">https://www.cnblogs.com/liangliangh/p/3576353.html</a></li></ul><p>未完待续 …</p>]]></content>
     
@@ -105,16 +155,16 @@
     
     
     
-    <category term="physics" scheme="https://xtom0369.github.io/categories/physics/"/>
+    <category term="Physics" scheme="https://xtom0369.github.io/categories/Physics/"/>
     
-    <category term="unity" scheme="https://xtom0369.github.io/categories/physics/unity/"/>
+    <category term="Unity" scheme="https://xtom0369.github.io/categories/Physics/Unity/"/>
     
     
-    <category term="bullet physics" scheme="https://xtom0369.github.io/tags/bullet-physics/"/>
+    <category term="Unity" scheme="https://xtom0369.github.io/tags/Unity/"/>
     
-    <category term="physics" scheme="https://xtom0369.github.io/tags/physics/"/>
+    <category term="Bullet Physics" scheme="https://xtom0369.github.io/tags/Bullet-Physics/"/>
     
-    <category term="unity" scheme="https://xtom0369.github.io/tags/unity/"/>
+    <category term="Physics" scheme="https://xtom0369.github.io/tags/Physics/"/>
     
   </entry>
   

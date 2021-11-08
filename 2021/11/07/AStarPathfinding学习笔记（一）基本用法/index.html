@@ -20,24 +20,27 @@
     var CONFIG = {"hostname":"xtom0369.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Why为什么要引入物理引擎？常见的需求是网络同步。 当下通用的网络同步方案有帧同步和状态同步。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二">
+  <meta name="description" content="前言AStarPathfinding是最热门的寻路插件（下面简称AStarPath），对标的是Unity的Navigation，但是相比之下更加灵活，不仅支持多种不同的图，还能对图进行局部调整。 正文下载和安装AStarPath可直接到官网下载  官网分三个版本，免费版、Pro版和Beta版，可以在这里对比不同版本之间的差异，一个主要的差异还是免费版用不了Recast Graph，这个比较蛋疼，R">
 <meta property="og:type" content="article">
-<meta property="og:title" content="三大物理引擎之Bullet">
-<meta property="og:url" content="https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/index.html">
+<meta property="og:title" content="AStarPathfinding学习笔记（一）基本用法">
+<meta property="og:url" content="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/index.html">
 <meta property="og:site_name" content="xtom&#39;s blog">
-<meta property="og:description" content="Why为什么要引入物理引擎？常见的需求是网络同步。 当下通用的网络同步方案有帧同步和状态同步。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二">
+<meta property="og:description" content="前言AStarPathfinding是最热门的寻路插件（下面简称AStarPath），对标的是Unity的Navigation，但是相比之下更加灵活，不仅支持多种不同的图，还能对图进行局部调整。 正文下载和安装AStarPath可直接到官网下载  官网分三个版本，免费版、Pro版和Beta版，可以在这里对比不同版本之间的差异，一个主要的差异还是免费版用不了Recast Graph，这个比较蛋疼，R">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png">
-<meta property="article:published_time" content="2021-10-28T14:38:04.000Z">
-<meta property="article:modified_time" content="2021-11-07T14:32:18.921Z">
+<meta property="og:image" content="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/%E4%B8%8B%E8%BD%BD%E7%89%88%E6%9C%AC.png">
+<meta property="og:image" content="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/RecastGraph.png">
+<meta property="og:image" content="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/AddNewGraph.png">
+<meta property="og:image" content="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/Scan.png">
+<meta property="article:published_time" content="2021-11-07T10:21:15.000Z">
+<meta property="article:modified_time" content="2021-11-08T14:02:09.550Z">
 <meta property="article:author" content="xtom">
 <meta property="article:tag" content="Unity">
-<meta property="article:tag" content="Bullet Physics">
-<meta property="article:tag" content="Physics">
+<meta property="article:tag" content="Pathfinding">
+<meta property="article:tag" content="A*">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png">
+<meta name="twitter:image" content="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/%E4%B8%8B%E8%BD%BD%E7%89%88%E6%9C%AC.png">
 
-<link rel="canonical" href="https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/">
+<link rel="canonical" href="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">
 
 
 <script id="page-configurations">
@@ -50,7 +53,7 @@
   };
 </script>
 
-  <title>三大物理引擎之Bullet | xtom's blog</title>
+  <title>AStarPathfinding学习笔记（一）基本用法 | xtom's blog</title>
   
 
 
@@ -204,7 +207,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/">
+    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -217,7 +220,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          三大物理引擎之Bullet
+          AStarPathfinding学习笔记（一）基本用法
         </h1>
 
         <div class="post-meta">
@@ -227,14 +230,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-10-28 22:38:04" itemprop="dateCreated datePublished" datetime="2021-10-28T22:38:04+08:00">2021-10-28</time>
+              <time title="创建时间：2021-11-07 18:21:15" itemprop="dateCreated datePublished" datetime="2021-11-07T18:21:15+08:00">2021-11-07</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-07 22:32:18" itemprop="dateModified" datetime="2021-11-07T22:32:18+08:00">2021-11-07</time>
+                <time title="修改时间：2021-11-08 22:02:09" itemprop="dateModified" datetime="2021-11-08T22:02:09+08:00">2021-11-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,16 +245,16 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Physics/" itemprop="url" rel="index"><span itemprop="name">Physics</span></a>
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Physics/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                  <a href="/categories/Unity/Pathfinding/" itemprop="url" rel="index"><span itemprop="name">Pathfinding</span></a>
                 </span>
             </span>
 
           
-            <span id="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/" class="post-meta-item leancloud_visitors" data-flag-title="三大物理引擎之Bullet" title="阅读次数">
+            <span id="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" class="post-meta-item leancloud_visitors" data-flag-title="AStarPathfinding学习笔记（一）基本用法" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -266,8 +269,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -282,70 +285,36 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
-<p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
-<span id="more"></span>
-
-<h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然Unity用的是<a target="_blank" rel="noopener" href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p>
-<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="学习Bullet的什么？"><a href="#学习Bullet的什么？" class="headerlink" title="学习Bullet的什么？"></a>学习Bullet的什么？</h3><ol>
-<li><p>通用形状的碰撞体实现</p>
-</li>
-<li><p>碰撞检测实现</p>
-</li>
-<li><p>刚体实现</p>
-</li>
-<li><p>柔体实现</p>
-</li>
-<li><p>IK实现</p>
-</li>
-<li><p>优化手段</p>
-<p> ……</p>
-</li>
-</ol>
-<h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><h3 id="如何进行Bullet学习？"><a href="#如何进行Bullet学习？" class="headerlink" title="如何进行Bullet学习？"></a>如何进行Bullet学习？</h3><ol>
-<li>文档和资料</li>
-</ol>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/bulletphysics/bullet3/blob/master/docs/BulletQuickstart.pdf">快速使用文档</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/bulletphysics/bullet3/blob/master/docs/Bullet_User_Manual.pdf">用户手册</a> </p>
-<ul>
-<li><a href="/2021/10/31/Bullet%E6%96%87%E6%A1%A3%E4%B9%8B%E3%80%8ABullet-User-Manual%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="《Bullet-User-Manual》阅读笔记">《Bullet-User-Manual》阅读笔记</a></li>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p>AStarPathfinding是最热门的寻路插件（下面简称<font color="#F46224">AStarPath</font>），对标的是Unity的<a target="_blank" rel="noopener" href="https://docs.unity.cn/cn/2019.4/Manual/Navigation.html">Navigation</a>，但是相比之下更加灵活，不仅支持多种不同的图，还能对图进行局部调整。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a><font color="#64EBC1">正文</font></h2><h3 id="下载和安装"><a href="#下载和安装" class="headerlink" title="下载和安装"></a>下载和安装</h3><p>AStarPath可直接到<a target="_blank" rel="noopener" href="https://arongranberg.com/astar/download">官网下载</a></p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/%E4%B8%8B%E8%BD%BD%E7%89%88%E6%9C%AC.png" alt="下载版本"></p>
+<p>官网分三个版本，免费版、Pro版和Beta版，可以在这里对比<a target="_blank" rel="noopener" href="https://arongranberg.com/astar/freevspro">不同版本之间的差异</a>，一个主要的差异还是免费版用不了Recast Graph，这个比较蛋疼，Recast相当于Navigation的自动生成路径，下面的文章基于4.2.15的Pro版本。</p>
+<p>安装就直接创建一个Unity工程把插件的unitypackage导入即可。</p>
+<h3 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h3><ul>
+<li>Graph</li>
 </ul>
+<p>AStarPath的核心概念是Graph，Graph可以理解为一张自定义生成导航数据的设置，注意是设置不是数据，生成的烘焙数据实际上在另一个地方。按照<a target="_blank" rel="noopener" href="https://arongranberg.com/astar/docs/getstarted.html">官方的说法</a>一个场景中最多可以有256张图，为了保证他足够的简单以及较好的性能，一般只用1~2个Graph来实现功能。</p>
+<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>为了防止枯燥还是直接上官方例子，主要是围绕插件支持的五种Graph，分别取一个例子。</p>
+<ul>
+<li>Recast Graph</li>
+</ul>
+<p>场景ExampleScenes\Example3_Recast_Navmesh1中是Recast Graph的简单用法。</p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/RecastGraph.png" alt="RecastGraph"></p>
+<p>其中想要生成导航路径最核心的是挂在A*节点上的Pathfinder组件，对应的脚本为AstarPath，添加组件的菜单为<strong>Component -&gt; pathfinding -&gt; pathfinder</strong>。</p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/AddNewGraph.png" alt="RecastGraph"></p>
+<p>点击pathfinder上的AddNewGraph会弹出可选择的Graph，选择Recast Graph。</p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/Scan.png" alt="Scan"></p>
+<p>随后哪怕不修改默认设置，直接点击Scan按钮，就会生成一张默认的导航图（蓝色部分）。</p>
+<ul>
+<li><p>Grid Graph</p>
+</li>
+<li><p>Layered Grid Graph</p>
+</li>
+<li><p>Point Graph</p>
+</li>
+<li><p>NavMesh Graph</p>
 </li>
 </ul>
-<ol start="2">
-<li>Demo</li>
-</ol>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">BulletPhysicsForUnity</a></p>
-<p>这是一个Unity版的Bullet插件，有<a target="_blank" rel="noopener" href="https://github.com/Phong13/BulletSharpUnity3d">github</a>版本，插件里将大量的C++接口暴露到了C#层，所以可以学到很多Bullet的概念，以及基础功能的实现。另外里面的bullet的dll是使用另一个github工程<a target="_blank" rel="noopener" href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>编译出来的，更底层的代码还是得看编译工程。</p>
-<ul>
-<li><a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" title="下载和安装">下载和安装</a></li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
-<p>bullet的github仓库，根据教程编译出vs工程，设置启动项目，运行VS即可看到demo工程。</p>
-<p><img src="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png"></p>
-</li>
-</ul>
-<ol start="3">
-<li>源码</li>
-</ol>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
-<p>撸完1和2，对bullet的使用也大概有个底了，就可以直接撸源码了。</p>
-</li>
-</ul>
-<ol start="4">
-<li>参考资料</li>
-</ol>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/liangliangh/p/3576353.html">https://www.cnblogs.com/liangliangh/p/3576353.html</a></li>
-</ul>
-<p>未完待续 …</p>
 
     </div>
 
@@ -356,8 +325,8 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Unity/" rel="tag"># Unity</a>
-              <a href="/tags/Bullet-Physics/" rel="tag"># Bullet Physics</a>
-              <a href="/tags/Physics/" rel="tag"># Physics</a>
+              <a href="/tags/Pathfinding/" rel="tag"># Pathfinding</a>
+              <a href="/tags/A/" rel="tag"># A*</a>
           </div>
 
         
@@ -366,13 +335,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/" rel="prev" title="Trigger的特点">
-      <i class="fa fa-chevron-left"></i> Trigger的特点
+    <a href="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/" rel="prev" title="【Unity引擎】寻路系统Navigation">
+      <i class="fa fa-chevron-left"></i> 【Unity引擎】寻路系统Navigation
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" rel="next" title="BulletPhysicsForUnity下载和安装">
-      BulletPhysicsForUnity下载和安装 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -432,7 +398,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why"><span class="nav-number">1.</span> <span class="nav-text">Why</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%BC%95%E5%85%A5%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要引入物理引擎？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AFBullet%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">为什么是Bullet？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What"><span class="nav-number">2.</span> <span class="nav-text">What</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0Bullet%E7%9A%84%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">学习Bullet的什么？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How"><span class="nav-number">3.</span> <span class="nav-text">How</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8CBullet%E5%AD%A6%E4%B9%A0%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">如何进行Bullet学习？</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">下载和安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="nav-number">2.2.</span> <span class="nav-text">基础概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">基本用法</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

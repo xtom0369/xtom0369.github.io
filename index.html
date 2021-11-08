@@ -194,6 +194,214 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="xtom">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xtom's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" class="post-title-link" itemprop="url">AStarPathfinding学习笔记（一）基本用法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-07 18:21:15" itemprop="dateCreated datePublished" datetime="2021-11-07T18:21:15+08:00">2021-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-08 22:02:09" itemprop="dateModified" datetime="2021-11-08T22:02:09+08:00">2021-11-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/Pathfinding/" itemprop="url" rel="index"><span itemprop="name">Pathfinding</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" class="post-meta-item leancloud_visitors" data-flag-title="AStarPathfinding学习笔记（一）基本用法" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p>AStarPathfinding是最热门的寻路插件（下面简称<font color="#F46224">AStarPath</font>），对标的是Unity的<a target="_blank" rel="noopener" href="https://docs.unity.cn/cn/2019.4/Manual/Navigation.html">Navigation</a>，但是相比之下更加灵活，不仅支持多种不同的图，还能对图进行局部调整。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a><font color="#64EBC1">正文</font></h2><h3 id="下载和安装"><a href="#下载和安装" class="headerlink" title="下载和安装"></a>下载和安装</h3><p>AStarPath可直接到<a target="_blank" rel="noopener" href="https://arongranberg.com/astar/download">官网下载</a></p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/%E4%B8%8B%E8%BD%BD%E7%89%88%E6%9C%AC.png" alt="下载版本"></p>
+<p>官网分三个版本，免费版、Pro版和Beta版，可以在这里对比<a target="_blank" rel="noopener" href="https://arongranberg.com/astar/freevspro">不同版本之间的差异</a>，一个主要的差异还是免费版用不了Recast Graph，这个比较蛋疼，Recast相当于Navigation的自动生成路径，下面的文章基于4.2.15的Pro版本。</p>
+<p>安装就直接创建一个Unity工程把插件的unitypackage导入即可。</p>
+<h3 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h3><ul>
+<li>Graph</li>
+</ul>
+<p>AStarPath的核心概念是Graph，Graph可以理解为一张自定义生成导航数据的设置，注意是设置不是数据，生成的烘焙数据实际上在另一个地方。按照<a target="_blank" rel="noopener" href="https://arongranberg.com/astar/docs/getstarted.html">官方的说法</a>一个场景中最多可以有256张图，为了保证他足够的简单以及较好的性能，一般只用1~2个Graph来实现功能。</p>
+<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>为了防止枯燥还是直接上官方例子，主要是围绕插件支持的五种Graph，分别取一个例子。</p>
+<ul>
+<li>Recast Graph</li>
+</ul>
+<p>场景ExampleScenes\Example3_Recast_Navmesh1中是Recast Graph的简单用法。</p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/RecastGraph.png" alt="RecastGraph"></p>
+<p>其中想要生成导航路径最核心的是挂在A*节点上的Pathfinder组件，对应的脚本为AstarPath，添加组件的菜单为<strong>Component -&gt; pathfinding -&gt; pathfinder</strong>。</p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/AddNewGraph.png" alt="RecastGraph"></p>
+<p>点击pathfinder上的AddNewGraph会弹出可选择的Graph，选择Recast Graph。</p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/Scan.png" alt="Scan"></p>
+<p>随后哪怕不修改默认设置，直接点击Scan按钮，就会生成一张默认的导航图（蓝色部分）。</p>
+<ul>
+<li><p>Grid Graph</p>
+</li>
+<li><p>Layered Grid Graph</p>
+</li>
+<li><p>Point Graph</p>
+</li>
+<li><p>NavMesh Graph</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="xtom">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xtom's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/" class="post-title-link" itemprop="url">【Unity引擎】寻路系统Navigation</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-11-05 22:29:03 / 修改时间：22:32:44" itemprop="dateCreated datePublished" datetime="2021-11-05T22:29:03+08:00">2021-11-05</time>
+            </span>
+
+          
+            <span id="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/" class="post-meta-item leancloud_visitors" data-flag-title="【Unity引擎】寻路系统Navigation" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><img src="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/1.png" alt="1"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/11/01/BulletPhysicsForUnity%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -403,7 +611,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-01 23:40:08" itemprop="dateModified" datetime="2021-11-01T23:40:08+08:00">2021-11-01</time>
+                <time title="修改时间：2021-11-08 21:41:53" itemprop="dateModified" datetime="2021-11-08T21:41:53+08:00">2021-11-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -411,11 +619,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/physics/" itemprop="url" rel="index"><span itemprop="name">physics</span></a>
+                  <a href="/categories/Physics/" itemprop="url" rel="index"><span itemprop="name">Physics</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/physics/unity/" itemprop="url" rel="index"><span itemprop="name">unity</span></a>
+                  <a href="/categories/Physics/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
                 </span>
             </span>
 
@@ -509,7 +717,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-04 22:55:51" itemprop="dateModified" datetime="2021-11-04T22:55:51+08:00">2021-11-04</time>
+                <time title="修改时间：2021-11-07 22:32:18" itemprop="dateModified" datetime="2021-11-07T22:32:18+08:00">2021-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -517,11 +725,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/physics/" itemprop="url" rel="index"><span itemprop="name">physics</span></a>
+                  <a href="/categories/Physics/" itemprop="url" rel="index"><span itemprop="name">Physics</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/physics/unity/" itemprop="url" rel="index"><span itemprop="name">unity</span></a>
+                  <a href="/categories/Physics/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
                 </span>
             </span>
 
@@ -855,18 +1063,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
