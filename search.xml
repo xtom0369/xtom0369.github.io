@@ -134,6 +134,57 @@
       </tags>
   </entry>
   <entry>
+    <title>BulletPhysicsForUnity下载和安装</title>
+    <url>/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><h3 id="BulletPhysicsForUnity是什么？"><a href="#BulletPhysicsForUnity是什么？" class="headerlink" title="BulletPhysicsForUnity是什么？"></a>BulletPhysicsForUnity是什么？</h3><p>BulletPhysicsForUnity是Bullet物理引擎在Unity上的插件。</p>
+<span id="more"></span>
+
+<h3 id="BulletPhysicsForUnity要下载哪个版本？"><a href="#BulletPhysicsForUnity要下载哪个版本？" class="headerlink" title="BulletPhysicsForUnity要下载哪个版本？"></a>BulletPhysicsForUnity要下载哪个版本？</h3><p>网上一共可以找到两个版本，分别是<a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore版本</a>和<a href="https://github.com/Phong13/BulletSharpUnity3d">github版本</a>。两个版本其实差不多，github版本可以看到最新的仓库，当然还有最新的bug。这两个仓库的共同点是都很多年没维护了。</p>
+<h3 id="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"><a href="#BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？" class="headerlink" title="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"></a>BulletPhysicsForUnity和<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>有什么关系？</h3><p>BulletSharpPInvoke是BulletPhysicsForUnity中C++ 源码的编译库。也就是说BulletPhysicsForUnity中只包含了Bullet的编译库以及暴露到C#的接口，不包含Bullet的源代码，但是这并不妨碍入门。</p>
+<h3 id="BulletPhysicsForUnity可以直接商用么？"><a href="#BulletPhysicsForUnity可以直接商用么？" class="headerlink" title="BulletPhysicsForUnity可以直接商用么？"></a>BulletPhysicsForUnity可以直接商用么？</h3><p>不确定，但当前存在的问题是接口的封装和Unity原生的相比比较原始，另外这种插件一般都需要另外做性能优化，因为游戏里的样本量和demo不是一个数量级。</p>
+<h2 id="下载和安装"><a href="#下载和安装" class="headerlink" title="下载和安装"></a><font color="#64EBC1">下载和安装</font></h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><ol>
+<li><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore仓库</a></li>
+<li><a href="https://github.com/Phong13/BulletSharpUnity3d">github仓库</a></li>
+</ol>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>两个仓库都是创建一个Unity空工程然后选1的把资源Import进工程，选2的把仓库放到Assets目录下即可。</p>
+<p>导入后选择Assets\Examples\Scenes\ExampleMenu场景，启动即可查看Demo效果。</p>
+<p><img src="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/1.png"></p>
+<p>至此，BulletPhysicsForUnity就下载安装完成。</p>
+]]></content>
+      <categories>
+        <category>Physics</category>
+        <category>Unity</category>
+      </categories>
+      <tags>
+        <tag>Unity</tag>
+        <tag>BulletPhysicsForUnity</tag>
+        <tag>Bullet Physics</tag>
+        <tag>Physics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Bullet文档之《Bullet_User_Manual》阅读笔记</title>
+    <url>/2021/10/31/Bullet%E6%96%87%E6%A1%A3%E4%B9%8B%E3%80%8ABullet-User-Manual%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>BulletPhysicsForUnity官方文档</title>
+    <url>/2021/11/01/BulletPhysicsForUnity%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/</url>
+    <content><![CDATA[<h2 id="原文地址"><a href="#原文地址" class="headerlink" title="原文地址"></a><font color="#64EBC1">原文地址</font></h2><p><a href="http://digitalopus.ca/site/bullet-physics-in-unity-3d/">http://digitalopus.ca/site/bullet-physics-in-unity-3d/</a></p>
+<h2 id="原文梗概"><a href="#原文梗概" class="headerlink" title="原文梗概"></a><font color="#64EBC1">原文梗概</font></h2><p>不会一字一句地翻译，只会摘取部分有效信息以及观点。</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3>]]></content>
+      <categories>
+        <category>physics</category>
+        <category>unity</category>
+      </categories>
+      <tags>
+        <tag>BulletPhysicsForUnity</tag>
+        <tag>bullet physics</tag>
+        <tag>physics</tag>
+        <tag>unity</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>三大物理引擎之Bullet</title>
     <url>/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/</url>
     <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
@@ -212,63 +263,6 @@
       </tags>
   </entry>
   <entry>
-    <title>BulletPhysicsForUnity下载和安装</title>
-    <url>/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><h3 id="BulletPhysicsForUnity是什么？"><a href="#BulletPhysicsForUnity是什么？" class="headerlink" title="BulletPhysicsForUnity是什么？"></a>BulletPhysicsForUnity是什么？</h3><p>BulletPhysicsForUnity是Bullet物理引擎在Unity上的插件。</p>
-<span id="more"></span>
-
-<h3 id="BulletPhysicsForUnity要下载哪个版本？"><a href="#BulletPhysicsForUnity要下载哪个版本？" class="headerlink" title="BulletPhysicsForUnity要下载哪个版本？"></a>BulletPhysicsForUnity要下载哪个版本？</h3><p>网上一共可以找到两个版本，分别是<a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore版本</a>和<a href="https://github.com/Phong13/BulletSharpUnity3d">github版本</a>。两个版本其实差不多，github版本可以看到最新的仓库，当然还有最新的bug。这两个仓库的共同点是都很多年没维护了。</p>
-<h3 id="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"><a href="#BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？" class="headerlink" title="BulletPhysicsForUnity和BulletSharpPInvoke有什么关系？"></a>BulletPhysicsForUnity和<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>有什么关系？</h3><p>BulletSharpPInvoke是BulletPhysicsForUnity中C++ 源码的编译库。也就是说BulletPhysicsForUnity中只包含了Bullet的编译库以及暴露到C#的接口，不包含Bullet的源代码，但是这并不妨碍入门。</p>
-<h3 id="BulletPhysicsForUnity可以直接商用么？"><a href="#BulletPhysicsForUnity可以直接商用么？" class="headerlink" title="BulletPhysicsForUnity可以直接商用么？"></a>BulletPhysicsForUnity可以直接商用么？</h3><p>不确定，但当前存在的问题是接口的封装和Unity原生的相比比较原始，另外这种插件一般都需要另外做性能优化，因为游戏里的样本量和demo不是一个数量级。</p>
-<h2 id="下载和安装"><a href="#下载和安装" class="headerlink" title="下载和安装"></a><font color="#64EBC1">下载和安装</font></h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><ol>
-<li><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">assetstore仓库</a></li>
-<li><a href="https://github.com/Phong13/BulletSharpUnity3d">github仓库</a></li>
-</ol>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>两个仓库都是创建一个Unity空工程然后选1的把资源Import进工程，选2的把仓库放到Assets目录下即可。</p>
-<p>导入后选择Assets\Examples\Scenes\ExampleMenu场景，启动即可查看Demo效果。</p>
-<p><img src="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/1.png"></p>
-<p>至此，BulletPhysicsForUnity就下载安装完成。</p>
-]]></content>
-      <categories>
-        <category>Physics</category>
-        <category>Unity</category>
-      </categories>
-      <tags>
-        <tag>Unity</tag>
-        <tag>Bullet Physics</tag>
-        <tag>Physics</tag>
-        <tag>BulletPhysicsForUnity</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Bullet文档之《Bullet_User_Manual》阅读笔记</title>
-    <url>/2021/10/31/Bullet%E6%96%87%E6%A1%A3%E4%B9%8B%E3%80%8ABullet-User-Manual%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>BulletPhysicsForUnity官方文档</title>
-    <url>/2021/11/01/BulletPhysicsForUnity%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/</url>
-    <content><![CDATA[<h2 id="原文地址"><a href="#原文地址" class="headerlink" title="原文地址"></a><font color="#64EBC1">原文地址</font></h2><p><a href="http://digitalopus.ca/site/bullet-physics-in-unity-3d/">http://digitalopus.ca/site/bullet-physics-in-unity-3d/</a></p>
-<h2 id="原文梗概"><a href="#原文梗概" class="headerlink" title="原文梗概"></a><font color="#64EBC1">原文梗概</font></h2><p>不会一字一句地翻译，只会摘取部分有效信息以及观点。</p>
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3>]]></content>
-      <categories>
-        <category>physics</category>
-        <category>unity</category>
-      </categories>
-      <tags>
-        <tag>BulletPhysicsForUnity</tag>
-        <tag>bullet physics</tag>
-        <tag>physics</tag>
-        <tag>unity</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【Unity引擎】寻路系统Navigation</title>
-    <url>/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/</url>
-    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><img src="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/1.png" alt="1"></p>
-]]></content>
-  </entry>
-  <entry>
     <title>AStarPathfinding学习笔记（一）基本用法</title>
     <url>/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p>AStarPathfinding是最热门的寻路插件（下面简称<font color="#F46224">AStarPath</font>），对标的是Unity的<a href="https://docs.unity.cn/cn/2019.4/Manual/Navigation.html">Navigation</a>，但是相比之下更加灵活，不仅支持多种不同的图，还能对图进行局部调整。</p>
@@ -276,6 +270,8 @@
 <p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/%E4%B8%8B%E8%BD%BD%E7%89%88%E6%9C%AC.png" alt="下载版本"></p>
 <p>官网分三个版本，免费版、Pro版和Beta版，可以在这里对比<a href="https://arongranberg.com/astar/freevspro">不同版本之间的差异</a>，一个主要的差异还是免费版用不了Recast Graph，这个比较蛋疼，Recast相当于Navigation的自动生成路径，下面的文章基于4.2.15的Pro版本。</p>
 <p>安装就直接创建一个Unity工程把插件的unitypackage导入即可。</p>
+<span id="more"></span>
+
 <h3 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h3><ul>
 <li>Graph</li>
 </ul>
@@ -286,11 +282,24 @@
 </ul>
 <p>场景ExampleScenes\Example3_Recast_Navmesh1中是Recast Graph的简单用法。</p>
 <p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/RecastGraph.png" alt="RecastGraph"></p>
-<p>其中想要生成导航路径最核心的是挂在A*节点上的Pathfinder组件，对应的脚本为AstarPath，添加组件的菜单为<strong>Component -&gt; pathfinding -&gt; pathfinder</strong>。</p>
+<ol>
+<li>其中想要生成导航路径最核心的是挂在A*节点上的Pathfinder组件，对应的脚本为AstarPath.cs，添加组件的菜单为<strong>Component -&gt; pathfinding -&gt; pathfinder</strong>。</li>
+</ol>
 <p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/AddNewGraph.png" alt="RecastGraph"></p>
-<p>点击pathfinder上的AddNewGraph会弹出可选择的Graph，选择Recast Graph。</p>
+<ol start="2">
+<li>点击pathfinder上的<strong>AddNewGraph</strong>会弹出可选择的Graph，选择Recast Graph。</li>
+</ol>
+<p>至此，生成导航数据的最基本步骤已经完成，用的是默认配置。</p>
+<p>接下来的问题是怎么看到我们生成的导航图效果？直接点击Scene或者Inspector中的Scan按钮，就会生成一张默认的导航图（蓝色部分）。</p>
 <p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/Scan.png" alt="Scan"></p>
-<p>随后哪怕不修改默认设置，直接点击Scan按钮，就会生成一张默认的导航图（蓝色部分）。</p>
+<p>然后Scan后的数据放在哪里？实际上此时的数据只在内存中，想要保存成文件有插件提供了两种方式，<strong>Save和Cache</strong>。</p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/Save.png" alt="Save"></p>
+<p>其生成的bytes文件一致，只不过Save偏向于<strong>将数据保存至文件</strong>，并且可自定义存储路径，Cache不仅会保存到文件，还会<strong>设置为缓存文件</strong>，使得AStarPath组件启动时不用重新执行Scan方法进行扫描，但是不能自定义存储路径。<font color="#F46224">商用的话不用想都是需要缓存的，我们试过地图较大时Scan的时间可能会长达10s+。</font> </p>
+<p>AStarPath.cs中可以看到这样一段判断代码</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Awake</span> (<span class="params"></span>)</span> &#123;</span><br><span class="line">	<span class="keyword">base</span>.Awake();</span><br><span class="line">	......</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (scanOnStartup &amp;&amp; (!data.cacheStartup || data.file_cachedStartup == <span class="literal">null</span>)) &#123;</span><br><span class="line">		Scan();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以得知想要不触发运行时扫描只需要关闭<strong>scanOnStartup</strong>或打开<strong>cacheStartup</strong>缓存开关或设置缓存文件，对应着下图的三个选项。<font color="#F46224">需要注意的是，如果选择的是保存文件，需要另外把二进制文件设置到图中的③处缓存才会生效</font></p>
+<p><img src="/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/ScanOnStartup.png" alt="ScanOnStartup"></p>
 <ul>
 <li><p>Grid Graph</p>
 </li>
@@ -311,5 +320,11 @@
         <tag>Pathfinding</tag>
         <tag>A*</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>【Unity引擎】寻路系统Navigation</title>
+    <url>/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/</url>
+    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><img src="/2021/11/05/%E3%80%90Unity%E5%BC%95%E6%93%8E%E3%80%91%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9FNavigation/1.png" alt="1"></p>
+]]></content>
   </entry>
 </search>
