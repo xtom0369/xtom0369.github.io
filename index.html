@@ -194,6 +194,113 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="xtom">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xtom's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/" class="post-title-link" itemprop="url">Unity的Collider参数需要注意的点</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-20 23:42:16" itemprop="dateCreated datePublished" datetime="2021-11-20T23:42:16+08:00">2021-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-21 17:14:34" itemprop="dateModified" datetime="2021-11-21T17:14:34+08:00">2021-11-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Physics/" itemprop="url" rel="index"><span itemprop="name">Physics</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Physics/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Physics/Unity/Bullet-Physics/" itemprop="url" rel="index"><span itemprop="name">Bullet Physics</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/" class="post-meta-item leancloud_visitors" data-flag-title="Unity的Collider参数需要注意的点" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p>问题的起因是项目中物理引擎的效果和运行时不一致，出现了一些虚空阻挡，或者碰撞效果异常，最后查到是对Collider组件中center等参数理解有偏差，<font color="#F46224">部分参数的配置需要叠加GameObject的rotation和scale的效果才是最终的结果</font>。</p>
+<h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a><font color="#64EBC1">详解</font></h2><p>由于物理引擎用的是Bullet，以BoxCollider为例，</p>
+<p><img src="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/BoxCollider.png" alt="BoxCollider"></p>
+<p>Bullet底层只认transform和boxHalfExtents（boxHalfExtents为size的一半），并没有center的概念，所以需要把center叠加到position上，以及把size换算为boxHalfExtents后传递给Bullet。</p>
+<p>这里有个需要注意的点是，center和size都是给予BoxCollider所在的GameObject的局部设置，所以center和size的换算需要叠加GameObject的rotation以及scale，代码如下。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> transform.position叠加了center后的世界坐标</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> Vector3 worldPosition =&gt; transform.position + Vector3.Scale(transform.rotation * center, transform.lossyScale);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Vector3 boxHalfExtents =&gt; Vector3.Scale(transform.rotation * size / <span class="number">2</span>, transform.lossyScale);</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/11/07/AStarPathfinding%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -225,7 +332,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-09 22:40:22" itemprop="dateModified" datetime="2021-11-09T22:40:22+08:00">2021-11-09</time>
+                <time title="修改时间：2021-11-21 15:17:07" itemprop="dateModified" datetime="2021-11-21T15:17:07+08:00">2021-11-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -593,7 +700,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-08 21:41:53" itemprop="dateModified" datetime="2021-11-08T21:41:53+08:00">2021-11-08</time>
+                <time title="修改时间：2021-11-21 15:43:49" itemprop="dateModified" datetime="2021-11-21T15:43:49+08:00">2021-11-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1045,18 +1152,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
