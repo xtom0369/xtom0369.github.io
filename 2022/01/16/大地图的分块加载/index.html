@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xtom0369.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。 目的项目的框架用的是上一个项目的小地图实时竞技的框架，面对新项目的中等偏大的地图存在明显得不适应，包括loading过慢，运行时帧数过低等各种问题，需要引入新的地图加载策略来改善加载与运行时效率的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大地图的分块加载">
+<meta property="og:url" content="https://xtom0369.github.io/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/index.html">
+<meta property="og:site_name" content="xtom&#39;s blog">
+<meta property="og:description" content="最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。 目的项目的框架用的是上一个项目的小地图实时竞技的框架，面对新项目的中等偏大的地图存在明显得不适应，包括loading过慢，运行时帧数过低等各种问题，需要引入新的地图加载策略来改善加载与运行时效率的问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xtom0369.github.io/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/1.png">
+<meta property="article:published_time" content="2022-01-16T06:37:38.000Z">
+<meta property="article:modified_time" content="2022-01-17T14:13:19.734Z">
+<meta property="article:author" content="xtom">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="资源加载">
+<meta property="article:tag" content="大世界">
+<meta property="article:tag" content="分帧加载">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xtom0369.github.io/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/1.png">
+
+<link rel="canonical" href="https://xtom0369.github.io/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>大地图的分块加载 | xtom's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="xtom's blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">xtom's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-books">
+
+    <a href="/books/" rel="section"><i class="fa fa-fw fa-archive"></i>书单</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="xtom">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xtom's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          大地图的分块加载
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-16 14:37:38" itemprop="dateCreated datePublished" datetime="2022-01-16T14:37:38+08:00">2022-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-17 22:13:19" itemprop="dateModified" datetime="2022-01-17T22:13:19+08:00">2022-01-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD/" itemprop="url" rel="index"><span itemprop="name">资源加载</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/" class="post-meta-item leancloud_visitors" data-flag-title="大地图的分块加载" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。</p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a><font color="#64EBC1">目的</font></h2><p>项目的框架用的是上一个项目的小地图实时竞技的框架，面对新项目的中等偏大的地图存在明显得不适应，包括loading过慢，运行时帧数过低等各种问题，需要引入新的地图加载策略来改善加载与运行时效率的问题。</p>
+<span id="more"></span>
+
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a><font color="#64EBC1">方案</font></h2><p>定方案时参考了<a target="_blank" rel="noopener" href="https://assetstore.unity.com/packages/tools/terrain/sectr-complete-2019-144433">SECTR COMPLETE</a>插件，也参考了网上的一些资料，SECTR COMPLETE插件主要还是针对地形，包括提供了地形分割工具以及依据分割后的分块加载案例，但是我们的场景是由模型搭建起来的而不是地形，加上我们的场景不仅是横向扩展，也是纵向扩展，有多层楼，所以不太适用。</p>
+<p>所以比较后还是选用了一个比较傻瓜化且容易实现的方案，即<strong>程序实现分块加载和配置机制 + 美术手动进行场景分割 + 策划手动配置加载卸载时机</strong>的方式，这种方案虽然看起来比较low，但胜在实现难度较低，可操作性强。</p>
+<h3 id="美术"><a href="#美术" class="headerlink" title="美术"></a>美术</h3><p>美术主要是将场景由单个场景分拆为多个场景，注意<strong>场景分布相对均匀且不穿帮</strong>，程序需要提供一个编辑器用于将分块场景进行加载和卸载，方便美术编辑。</p>
+<h3 id="策划"><a href="#策划" class="headerlink" title="策划"></a>策划</h3><p>策划需要配置每块场景的加载和卸载时机，这里有两个需要注意的点</p>
+<ul>
+<li><strong>提前制定可用于加载或卸载的时机</strong></li>
+</ul>
+<p>加载时对CPU的占用会变高，需要程序提前和策划协商好加载时机，比如CG和视频播放，或者走过某些只需要玩家纯移动的过场等CPU相对空闲的时候</p>
+<ul>
+<li><strong>添加保底</strong></li>
+</ul>
+<p>我们在加载过程中在底层和应用层都用了分帧加载，存在走到某一块时资源还未准备好的情况，需要提供可配置的保底机制，最粗暴的是打开loading之类的，当然一般不会触发。注意开启loading时关闭分帧加载，将加载速度拉满。</p>
+<h3 id="程序"><a href="#程序" class="headerlink" title="程序"></a>程序</h3><p>程序的工作重点在于，如何保证实现<font color="#F46224"><strong>丝滑</strong></font>的分块加载和卸载。</p>
+<p>围绕这个重点，我们重点做了以下件事情</p>
+<ul>
+<li><strong>资源层的分帧加载</strong></li>
+</ul>
+<p>这是最为核心的一部分。因为如果不能实现丝滑的分帧加载，那对于策划来说不如把他们丢回loading去做，虽然慢，但是至少不影响过程中的体验。</p>
+<p>资源层的对象池这些就不赘述了，几乎是每个项目必备。在对象池的基础上，资源层的分帧加载集中在两块，一是<font color="#F46224"><strong>加载</strong></font>，二是<font color="#F46224"><strong>实例化</strong></font>。分帧加载的思路是，所有的加载请求用加载队列进行维护，每帧分配固定的时间进行加载和实例化，比如10ms，超过了则放到下一帧进行处理，核心代码也非常简单</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Queue&lt;T&gt; _reqQueue = <span class="keyword">new</span> Queue&lt;T&gt;();</span><br><span class="line"><span class="built_in">float</span> _lastUpdateTime;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 是否满载</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="built_in">bool</span> busy =&gt; Time.realtimeSinceStartup - _lastUpdateTime &gt;= <span class="number">0.005f</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 每帧更新</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Update</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _lastUpdateTime = Time.realtimeSinceStartup;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (_reqQueue.Count &gt; <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> req = _reqQueue.Dequeue();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 加载和实例化</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (busy) <span class="comment">// 超过实例化的时间则分帧处理</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的算法虽然可以实现基本的分帧需求，但问题也很明显：</p>
+<p>1）单个资源的加载和实例化的耗时可能仍较大时会产生尖峰</p>
+<p>2）单个资源的加载耗时已经较大时会产生尖峰</p>
+<p>第一个问题比较好解决，可以进一步优化，为单个资源的请求维护一个状态，未加载/加载/实例化/已加载，在加载与实例化之前加多一步满载检测，满载则跳出循环，下一帧再继续处理</p>
+<p>第二个问题其实是第一个问题的恶化结果，常见于场景加载，我们的处理方式是将场景资源分块导出成预制体，运行时再分块加载。这里有一个需要注意的点，<font color="#FF0000"><strong>需要确保场景在分拆为预制体后烘焙结果不受影响</strong></font>。我们用的是<a target="_blank" rel="noopener" href="https://assetstore.unity.com/packages/tools/level-design/bakery-gpu-lightmapper-122218?locale=zh-CN">Bakery</a>来做场景烘焙，烘焙后的结果可能存在对GameObject或Component的实例依赖（如下图），这种情况下做分拆会导致烘焙结果失效，这种情况的一个解决方法是将烘焙后的结果和依赖的实例打成一个预设。</p>
+<p><img src="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/1.png" alt="1"></p>
+<ul>
+<li><strong>业务层场景配置的彻底分块</strong></li>
+</ul>
+<p>战斗场景中除了有基本的场景资源外，经常伴随着刷怪，刷关卡物件等场景配置类需求，需要将对应的配置资源进行彻底分块，比如怪物A和物件A隶属于分块A等，加载分块A时将怪物A和物件A进行预加载，将配置资源的彻底分块有利于减少内存和CPU的浪费。</p>
+<ul>
+<li><strong>业务层的分帧加载</strong></li>
+</ul>
+<p>业务层除了资源的加载外，各个项目可能还有其他许多需要处理的逻辑，比如我们项目中使用了帧同步，需要创建相应的逻辑层和显示层，我们还将部分较为耗时的Component在导出资源时进行隐藏，加载后进行分帧激活，等等的逻辑，也需要做分帧处理。</p>
+<h2 id="其他优化"><a href="#其他优化" class="headerlink" title="其他优化"></a><font color="#64EBC1">其他优化</font></h2><ul>
+<li>组件分帧加载</li>
+</ul>
+<p>部分Component的启动生命周期耗时较高但激活顺序对结果没有影响时，可以将Component或GameObject在场景加载后，进行延迟分帧激活</p>
+<h4 id="这就是我们中等地图的分块加载思路，欢迎指点和探讨"><a href="#这就是我们中等地图的分块加载思路，欢迎指点和探讨" class="headerlink" title="这就是我们中等地图的分块加载思路，欢迎指点和探讨~"></a>这就是我们中等地图的分块加载思路，欢迎指点和探讨~</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Unity/" rel="tag"># Unity</a>
+              <a href="/tags/%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD/" rel="tag"># 资源加载</a>
+              <a href="/tags/%E5%A4%A7%E4%B8%96%E7%95%8C/" rel="tag"># 大世界</a>
+              <a href="/tags/%E5%88%86%E5%B8%A7%E5%8A%A0%E8%BD%BD/" rel="tag"># 分帧加载</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" rel="prev" title="游戏物理（一）基本概念">
+      <i class="fa fa-chevron-left"></i> 游戏物理（一）基本概念
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BE%8E%E6%9C%AF"><span class="nav-number">2.1.</span> <span class="nav-text">美术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E5%88%92"><span class="nav-number">2.2.</span> <span class="nav-text">策划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.3.</span> <span class="nav-text">程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%BC%98%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">其他优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E5%B0%B1%E6%98%AF%E6%88%91%E4%BB%AC%E4%B8%AD%E7%AD%89%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD%E6%80%9D%E8%B7%AF%EF%BC%8C%E6%AC%A2%E8%BF%8E%E6%8C%87%E7%82%B9%E5%92%8C%E6%8E%A2%E8%AE%A8"><span class="nav-number">3.0.1.</span> <span class="nav-text">这就是我们中等地图的分块加载思路，欢迎指点和探讨~</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="xtom"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">xtom</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xtom0369" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xtom0369" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xtom0369@gmail.com" title="E-Mail → mailto:xtom0369@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xtom</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'Ex2r6JCM8GnPXAYqmtnhdx56-gzGzoHsz',
+      appKey     : 'mKA26DXnVY8EeFIYbQWyWkrR',
+      placeholder: "leave your comment",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+
+  
+    <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>

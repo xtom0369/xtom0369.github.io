@@ -6,7 +6,7 @@
   <link href="https://xtom0369.github.io/atom.xml" rel="self"/>
   
   <link href="https://xtom0369.github.io/"/>
-  <updated>2021-11-30T12:38:44.870Z</updated>
+  <updated>2022-01-17T14:13:19.734Z</updated>
   <id>https://xtom0369.github.io/</id>
   
   <author>
@@ -15,6 +15,61 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>大地图的分块加载</title>
+    <link href="https://xtom0369.github.io/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/"/>
+    <id>https://xtom0369.github.io/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/</id>
+    <published>2022-01-16T06:37:38.000Z</published>
+    <updated>2022-01-17T14:13:19.734Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。</p><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a><font color="#64EBC1">目的</font></h2><p>项目的框架用的是上一个项目的小地图实时竞技的框架，面对新项目的中等偏大的地图存在明显得不适应，包括loading过慢，运行时帧数过低等各种问题，需要引入新的地图加载策略来改善加载与运行时效率的问题。</p><span id="more"></span><h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a><font color="#64EBC1">方案</font></h2><p>定方案时参考了<a href="https://assetstore.unity.com/packages/tools/terrain/sectr-complete-2019-144433">SECTR COMPLETE</a>插件，也参考了网上的一些资料，SECTR COMPLETE插件主要还是针对地形，包括提供了地形分割工具以及依据分割后的分块加载案例，但是我们的场景是由模型搭建起来的而不是地形，加上我们的场景不仅是横向扩展，也是纵向扩展，有多层楼，所以不太适用。</p><p>所以比较后还是选用了一个比较傻瓜化且容易实现的方案，即<strong>程序实现分块加载和配置机制 + 美术手动进行场景分割 + 策划手动配置加载卸载时机</strong>的方式，这种方案虽然看起来比较low，但胜在实现难度较低，可操作性强。</p><h3 id="美术"><a href="#美术" class="headerlink" title="美术"></a>美术</h3><p>美术主要是将场景由单个场景分拆为多个场景，注意<strong>场景分布相对均匀且不穿帮</strong>，程序需要提供一个编辑器用于将分块场景进行加载和卸载，方便美术编辑。</p><h3 id="策划"><a href="#策划" class="headerlink" title="策划"></a>策划</h3><p>策划需要配置每块场景的加载和卸载时机，这里有两个需要注意的点</p><ul><li><strong>提前制定可用于加载或卸载的时机</strong></li></ul><p>加载时对CPU的占用会变高，需要程序提前和策划协商好加载时机，比如CG和视频播放，或者走过某些只需要玩家纯移动的过场等CPU相对空闲的时候</p><ul><li><strong>添加保底</strong></li></ul><p>我们在加载过程中在底层和应用层都用了分帧加载，存在走到某一块时资源还未准备好的情况，需要提供可配置的保底机制，最粗暴的是打开loading之类的，当然一般不会触发。注意开启loading时关闭分帧加载，将加载速度拉满。</p><h3 id="程序"><a href="#程序" class="headerlink" title="程序"></a>程序</h3><p>程序的工作重点在于，如何保证实现<font color="#F46224"><strong>丝滑</strong></font>的分块加载和卸载。</p><p>围绕这个重点，我们重点做了以下件事情</p><ul><li><strong>资源层的分帧加载</strong></li></ul><p>这是最为核心的一部分。因为如果不能实现丝滑的分帧加载，那对于策划来说不如把他们丢回loading去做，虽然慢，但是至少不影响过程中的体验。</p><p>资源层的对象池这些就不赘述了，几乎是每个项目必备。在对象池的基础上，资源层的分帧加载集中在两块，一是<font color="#F46224"><strong>加载</strong></font>，二是<font color="#F46224"><strong>实例化</strong></font>。分帧加载的思路是，所有的加载请求用加载队列进行维护，每帧分配固定的时间进行加载和实例化，比如10ms，超过了则放到下一帧进行处理，核心代码也非常简单</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Queue&lt;T&gt; _reqQueue = <span class="keyword">new</span> Queue&lt;T&gt;();</span><br><span class="line"><span class="built_in">float</span> _lastUpdateTime;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 是否满载</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="built_in">bool</span> busy =&gt; Time.realtimeSinceStartup - _lastUpdateTime &gt;= <span class="number">0.005f</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 每帧更新</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Update</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _lastUpdateTime = Time.realtimeSinceStartup;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (_reqQueue.Count &gt; <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> req = _reqQueue.Dequeue();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 加载和实例化</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (busy) <span class="comment">// 超过实例化的时间则分帧处理</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>上面的算法虽然可以实现基本的分帧需求，但问题也很明显：</p><p>1）单个资源的加载和实例化的耗时可能仍较大时会产生尖峰</p><p>2）单个资源的加载耗时已经较大时会产生尖峰</p><p>第一个问题比较好解决，可以进一步优化，为单个资源的请求维护一个状态，未加载/加载/实例化/已加载，在加载与实例化之前加多一步满载检测，满载则跳出循环，下一帧再继续处理</p><p>第二个问题其实是第一个问题的恶化结果，常见于场景加载，我们的处理方式是将场景资源分块导出成预制体，运行时再分块加载。这里有一个需要注意的点，<font color="#FF0000"><strong>需要确保场景在分拆为预制体后烘焙结果不受影响</strong></font>。我们用的是<a href="https://assetstore.unity.com/packages/tools/level-design/bakery-gpu-lightmapper-122218?locale=zh-CN">Bakery</a>来做场景烘焙，烘焙后的结果可能存在对GameObject或Component的实例依赖（如下图），这种情况下做分拆会导致烘焙结果失效，这种情况的一个解决方法是将烘焙后的结果和依赖的实例打成一个预设。</p><p><img src="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/1.png" alt="1"></p><ul><li><strong>业务层场景配置的彻底分块</strong></li></ul><p>战斗场景中除了有基本的场景资源外，经常伴随着刷怪，刷关卡物件等场景配置类需求，需要将对应的配置资源进行彻底分块，比如怪物A和物件A隶属于分块A等，加载分块A时将怪物A和物件A进行预加载，将配置资源的彻底分块有利于减少内存和CPU的浪费。</p><ul><li><strong>业务层的分帧加载</strong></li></ul><p>业务层除了资源的加载外，各个项目可能还有其他许多需要处理的逻辑，比如我们项目中使用了帧同步，需要创建相应的逻辑层和显示层，我们还将部分较为耗时的Component在导出资源时进行隐藏，加载后进行分帧激活，等等的逻辑，也需要做分帧处理。</p><h2 id="其他优化"><a href="#其他优化" class="headerlink" title="其他优化"></a><font color="#64EBC1">其他优化</font></h2><ul><li>组件分帧加载</li></ul><p>部分Component的启动生命周期耗时较高但激活顺序对结果没有影响时，可以将Component或GameObject在场景加载后，进行延迟分帧激活</p><h4 id="这就是我们中等地图的分块加载思路，欢迎指点和探讨"><a href="#这就是我们中等地图的分块加载思路，欢迎指点和探讨" class="headerlink" title="这就是我们中等地图的分块加载思路，欢迎指点和探讨~"></a>这就是我们中等地图的分块加载思路，欢迎指点和探讨~</h4>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。&lt;/p&gt;
+&lt;h2 id=&quot;目的&quot;&gt;&lt;a href=&quot;#目的&quot; class=&quot;headerlink&quot; title=&quot;目的&quot;&gt;&lt;/a&gt;&lt;font color=&quot;#64EBC1&quot;&gt;目的&lt;/font&gt;&lt;/h2&gt;&lt;p&gt;项目的框架用的是上一个项目的小地图实时竞技的框架，面对新项目的中等偏大的地图存在明显得不适应，包括loading过慢，运行时帧数过低等各种问题，需要引入新的地图加载策略来改善加载与运行时效率的问题。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Unity" scheme="https://xtom0369.github.io/categories/Unity/"/>
+    
+    <category term="资源加载" scheme="https://xtom0369.github.io/categories/Unity/%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD/"/>
+    
+    
+    <category term="Unity" scheme="https://xtom0369.github.io/tags/Unity/"/>
+    
+    <category term="资源加载" scheme="https://xtom0369.github.io/tags/%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD/"/>
+    
+    <category term="大世界" scheme="https://xtom0369.github.io/tags/%E5%A4%A7%E4%B8%96%E7%95%8C/"/>
+    
+    <category term="分帧加载" scheme="https://xtom0369.github.io/tags/%E5%88%86%E5%B8%A7%E5%8A%A0%E8%BD%BD/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>游戏物理（一）基本概念</title>
+    <link href="https://xtom0369.github.io/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
+    <id>https://xtom0369.github.io/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</id>
+    <published>2021-12-08T13:38:36.000Z</published>
+    <updated>2021-12-09T14:05:41.664Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p><strong>只有牢固的基础才能攀登更高的山峰。</strong></p><h2 id="定律"><a href="#定律" class="headerlink" title="定律"></a><font color="#64EBC1">定律</font></h2><h3 id="牛顿运动定律"><a href="#牛顿运动定律" class="headerlink" title="牛顿运动定律"></a>牛顿运动定律</h3><ol><li><p>每个物体都保持<strong>静止或者匀速直线运动</strong>的状态，除非有外力作用于它迫使它改变状态。</p></li><li><p>运动的变化正比于外力，变化的方向沿外力作用的直线方向。</p></li><li><p>每一个作用都有一个相等的反作用，两个物体的相互作用总是相等的。</p></li></ol><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#64EBC1">基本概念</font></h2><ul><li><h3 id="右手坐标系"><a href="#右手坐标系" class="headerlink" title="右手坐标系"></a>右手坐标系</h3><p>二维的坐标系统中，逆时针旋转为正方向</p></li><li></li></ul><h2 id="通用符号"><a href="#通用符号" class="headerlink" title="通用符号"></a><font color="#64EBC1">通用符号</font></h2><table><thead><tr><th>物理量</th><th>符号</th><th>量纲</th></tr></thead><tbody><tr><td>线性加速度</td><td>A</td><td>L/T^2^</td></tr><tr><td>单元格</td><td>单元格</td><td>单元格</td></tr></tbody></table><h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a><font color="#64EBC1">公式</font></h2><p>$F = ma$</p><img src="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/file.png" width="100" height="35" alt="图片名称" align="left">]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;&lt;font color=&quot;#64EBC1&quot;&gt;前言&lt;/font&gt;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;只有牢固的基础才能攀登更高的山峰。&lt;/strong&gt;&lt;/p&gt;
+&lt;h</summary>
+      
+    
+    
+    
+    <category term="physics" scheme="https://xtom0369.github.io/categories/physics/"/>
+    
+    
+    <category term="physics" scheme="https://xtom0369.github.io/tags/physics/"/>
+    
+  </entry>
   
   <entry>
     <title>Unity的Collider参数需要注意的点</title>
