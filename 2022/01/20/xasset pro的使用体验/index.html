@@ -20,19 +20,19 @@
     var CONFIG = {"hostname":"xtom0369.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="最近把项目的资源层换成了xasset团队版，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章又长又臭，但包含了实战过程中的经验，希望兄弟们看完应该可以避开一些坑。">
+  <meta name="description" content="最近把项目的资源层换成了xasset团队版，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章比较长，但包含了实战过程中的经验，希望大家看完应该可以避开一些坑。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="xasset pro的使用体验">
 <meta property="og:url" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/index.html">
 <meta property="og:site_name" content="xtom&#39;s blog">
-<meta property="og:description" content="最近把项目的资源层换成了xasset团队版，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章又长又臭，但包含了实战过程中的经验，希望兄弟们看完应该可以避开一些坑。">
+<meta property="og:description" content="最近把项目的资源层换成了xasset团队版，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章比较长，但包含了实战过程中的经验，希望大家看完应该可以避开一些坑。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/%E4%BC%98%E7%82%B91.png">
 <meta property="og:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/%E4%BC%98%E7%82%B92.png">
 <meta property="og:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/Build%E5%92%8CGroup.png">
 <meta property="og:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/Group%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96.png">
 <meta property="article:published_time" content="2022-01-20T13:36:27.000Z">
-<meta property="article:modified_time" content="2022-01-25T14:06:31.210Z">
+<meta property="article:modified_time" content="2022-01-25T14:11:04.041Z">
 <meta property="article:author" content="xtom">
 <meta property="article:tag" content="Unity">
 <meta property="article:tag" content="资源加载">
@@ -238,7 +238,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-25 22:06:31" itemprop="dateModified" datetime="2022-01-25T22:06:31+08:00">2022-01-25</time>
+                <time title="修改时间：2022-01-25 22:11:04" itemprop="dateModified" datetime="2022-01-25T22:11:04+08:00">2022-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -286,7 +286,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>最近把项目的资源层换成了<a target="_blank" rel="noopener" href="https://www.xasset.pro/">xasset团队版</a>，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章又长又臭，但包含了实战过程中的经验，希望兄弟们看完应该可以避开一些坑。</p>
+        <p>最近把项目的资源层换成了<a target="_blank" rel="noopener" href="https://www.xasset.pro/">xasset团队版</a>，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章比较长，但包含了实战过程中的经验，希望大家看完应该可以避开一些坑。</p>
 <span id="more"></span>
 
 <h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a><font color="#64EBC1">目的</font></h2><p>上一篇<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/458672730">大地图分块加载</a>的文章里有提到，当时我们有了一个<strong>流畅分帧加载</strong>的需求，我们之前的项目主要是分量加载，比如最多同时加载10的资源，这种设计的问题我在上一篇文章也提到了，加载10个10M的资源和10个10k的资源是不一样的事情，没办法实现平滑加载，而分帧加载是xasset pro的宣传点之一。</p>
