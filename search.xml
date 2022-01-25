@@ -1,261 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>开发装机环境</title>
-    <url>/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/</url>
-    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><p>写这样一个文档是因为电脑总会因为某些问题而面临重新安装开发环境，包括但不限于</p>
-<ul>
-<li>购置新机器</li>
-<li>重装系统</li>
-</ul>
-<p>有些所以需要记录下重装所需安装的软件和环境的设置。</p>
-<p>记录的内容主要是网址，部分没有官网的会以网盘的方式分享。考虑过都保存软件，但是可能会导致安装后的二次更新问题，维护成本也是个问题，所以还是选择网址。</p>
-<p>以下的记录只针对windows。另外我在想，是不是可以做个脚本一键装机？文章将持续更新</p>
+    <title>大地图的分块加载</title>
+    <url>/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/</url>
+    <content><![CDATA[<p>最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。</p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a><font color="#64EBC1">目的</font></h2><p>项目的框架用的是上一个项目的小地图实时竞技的框架，面对新项目的中等偏大的地图存在明显得不适应，包括loading过慢，运行时帧数过低等各种问题，需要引入新的地图加载策略来改善加载与运行时效率的问题。</p>
 <span id="more"></span>
 
-<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><p><strong>引擎</strong></p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a><font color="#64EBC1">方案</font></h2><p>定方案时参考了<a href="https://assetstore.unity.com/packages/tools/terrain/sectr-complete-2019-144433">SECTR COMPLETE</a>插件，也参考了网上的一些资料，SECTR COMPLETE插件主要还是针对地形，包括提供了地形分割工具以及依据分割后的分块加载案例，但是我们的场景是由模型搭建起来的而不是地形，加上我们的场景不仅是横向扩展，也是纵向扩展，有多层楼，所以不太适用。</p>
+<p>所以比较后还是选用了一个比较傻瓜化且容易实现的方案，即<strong>程序实现分块加载和配置机制 + 美术手动进行场景分割 + 策划手动配置加载卸载时机</strong>的方式，这种方案虽然看起来比较low，但胜在实现难度较低，可操作性强。</p>
+<h3 id="美术"><a href="#美术" class="headerlink" title="美术"></a>美术</h3><p>美术主要是将场景由单个场景分拆为多个场景，注意<strong>场景分布相对均匀且不穿帮</strong>，程序需要提供一个编辑器用于将分块场景进行加载和卸载，方便美术编辑。</p>
+<h3 id="策划"><a href="#策划" class="headerlink" title="策划"></a>策划</h3><p>策划需要配置每块场景的加载和卸载时机，这里有两个需要注意的点</p>
 <ul>
-<li><p><a href="https://unity.cn/releases/full/2021">Unity</a></p>
-</li>
-<li><p><a href="https://developer.android.com/studio">Android Studio</a> </p>
-</li>
-<li><p><a href="https://developer.apple.com/xcode/resources/">Xcode</a> </p>
-</li>
-<li><p><a href="https://www.fairygui.com/">FairyGUI</a> （UI引擎）</p>
-</li>
+<li><strong>提前制定可用于加载或卸载的时机</strong></li>
 </ul>
-<p><strong>IDE</strong></p>
+<p>加载时对CPU的占用会变高，需要程序提前和策划协商好加载时机，比如CG和视频播放，或者走过某些只需要玩家纯移动的过场等CPU相对空闲的时候</p>
 <ul>
-<li><p><a href="https://visualstudio.microsoft.com/zh-hans/vs/">Visual Studio</a>（主力IDE，<font color="#ff0000"><strong>Unity+VS这两兄弟分分钟吃光你的内存，特别是当unity工程较大时，内存最好有24~32g</strong></font>，当然现在也有人开始迁往Rider）</p>
-</li>
-<li><p><a href="https://code.visualstudio.com/?wt.mc_id=vscom_downloads">Visual Studio Code</a></p>
-</li>
-<li><p><a href="https://www.sublimetext.com/3">Sublime3</a> </p>
-</li>
+<li><strong>添加保底</strong></li>
 </ul>
-<p><strong>Tools</strong></p>
+<p>我们在加载过程中在底层和应用层都用了分帧加载，存在走到某一块时资源还未准备好的情况，需要提供可配置的保底机制，最粗暴的是打开loading之类的，当然一般不会触发。注意开启loading时关闭分帧加载，将加载速度拉满。</p>
+<h3 id="程序"><a href="#程序" class="headerlink" title="程序"></a>程序</h3><p>程序的工作重点在于，如何保证实现<font color="#F46224"><strong>丝滑</strong></font>的分块加载和卸载。</p>
+<p>围绕这个重点，我们重点做了以下件事情</p>
 <ul>
-<li><p><a href="https://cmake.org/download/">Cmake</a>（起初是用来编译C++库，后面还用来做C#编dll）</p>
-</li>
-<li><p><a href="https://desktop.github.com/">Github Desktop</a></p>
-</li>
-<li><p><a href="https://git-scm.com/downloads">Git</a>（git命令行）</p>
-</li>
-<li><p><a href="https://tortoisegit.org/download/">TortoiseGit</a>（svn切换到git推荐，操作很接近，当然这两个工具的核心还是在于协作思想的不同）</p>
-</li>
-<li><p><a href="https://tortoisesvn.net/downloads.zh.html">TortoiseSVN</a></p>
-</li>
+<li><strong>资源层的分帧加载</strong></li>
 </ul>
-<h3 id="日常"><a href="#日常" class="headerlink" title="日常"></a>日常</h3><p><strong>效率</strong></p>
-<ul>
-<li><p><a href="https://dida365.com/about/download">滴答清单</a>（会员有日周月的时间线功能）</p>
-</li>
-<li><p><a href="https://www.notion.so/desktop">Notion</a>（知识体系整理）</p>
-</li>
-<li><p><a href="https://www.listary.com/download">listary</a>（从策划那里“偷”来的工具，主要用来快速索引文件，比如配置表）</p>
-</li>
-<li><p><a href="https://cidian.youdao.com/index.html">有道词典</a></p>
-</li>
-</ul>
-<p><strong>浏览器</strong></p>
-<ul>
-<li><p><a href="https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B77CCCA8B-F59C-E570-E701-E2575690F29C%7D%26lang%3Dzh-CN%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe">Chrome</a></p>
-<ul>
-<li><p><a href="https://chrome.google.com/webstore/detail/sslspeedy/lmdbclggelcpbeoamojllkghfalbjeja">Chrome插件-sslspeedy</a>（vpn工具，需要配合<a href="https://1937o.com/main.php">vpnso账户</a>）</p>
-</li>
-<li><p><a href="https://chrome.google.com/webstore/detail/chrono-download-manager/mciiogijehkdemklbdcbfkefimifhecn?utm_source=chrome-ntp-icon">Chrome插件-下载管理器</a>（自带的没有断点续传功能）  </p>
-</li>
-<li><p><a href="https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?utm_source=chrome-ntp-icon">Chrome插件-google翻译</a></p>
-</li>
-</ul>
-</li>
-</ul>
-<p><strong>VPN</strong></p>
-<ul>
-<li><p><a href="https://1937o.com/main.php">vpnso</a>（vpn网站，用了6年了，稳定性高，看了下最新私人账号一年200，我买的时候100，后面续费也都是100，很良心，浏览网页看视频操作github仓库都问题不大。支持windows/chrome插件/android/ios）</p>
-</li>
-<li><p><a href="https://openvpn.net/community-downloads/">openvpn</a>（这个主要用来利用vpn远程办公，但是需要自己搭载环境，效果类似于向日葵Teamviewer等，但是不会被限速！同理也可以在家搭建NAS+DDNS，相当于一个家庭网盘，可在任何一个有网络的地方取用家里的资料，同样不会被限速，且资料安全，当然最好再自己搞下自动备份。）</p>
-</li>
-</ul>
-<p><strong>娱乐</strong></p>
-<ul>
-<li><p><a href="http://v.qq.com/download.html">腾讯视频</a>（豆瓣高分电影多）</p>
-</li>
-<li><p><a href="https://pd.youku.com/pc?spm=a2hpd.20022520.carousel.3!3~A">优酷视频</a>（TVB铁粉必备，但是现在的TVB是越来越没内味了）</p>
-</li>
-<li><p><a href="https://y.qq.com/download/download.html">QQ音乐</a></p>
-</li>
-<li><p><a href="https://music.163.com/#/download">网易云音乐</a></p>
-</li>
-</ul>
-<p><strong>社交</strong></p>
-<ul>
-<li><p><a href="https://tim.qq.com/download.html">TIM</a></p>
-</li>
-<li><p><a href="https://windows.weixin.qq.com/?lang=zh_CN">Wechat</a></p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>装机</tag>
-        <tag>开发环境</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Trigger的特点</title>
-    <url>/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/</url>
-    <content><![CDATA[<h2 id="Trigger的特点"><a href="#Trigger的特点" class="headerlink" title="Trigger的特点"></a>Trigger的特点</h2><p>众所周知，Animator的Trigger和Bool的区别是，Trigger是一次性触发判断，触发后会自动重置，而Bool是持久性变量，所以使用Trigger图的就是自动重置的功能。</p>
-<span id="more"></span>
+<p>这是最为核心的一部分。因为如果不能实现丝滑的分帧加载，那对于策划来说不如把他们丢回loading去做，虽然慢，但是至少不影响过程中的体验。</p>
+<p>资源层的对象池这些就不赘述了，几乎是每个项目必备。在对象池的基础上，资源层的分帧加载集中在两块，一是<font color="#F46224"><strong>加载</strong></font>，二是<font color="#F46224"><strong>实例化</strong></font>。分帧加载的思路是，所有的加载请求用加载队列进行维护，每帧分配固定的时间进行加载和实例化，比如10ms，超过了则放到下一帧进行处理，核心代码也非常简单</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">Queue&lt;T&gt; _reqQueue = <span class="keyword">new</span> Queue&lt;T&gt;();</span><br><span class="line"><span class="built_in">float</span> _lastUpdateTime;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 是否满载</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="built_in">bool</span> busy =&gt; Time.realtimeSinceStartup - _lastUpdateTime &gt;= <span class="number">0.005f</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 每帧更新</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Update</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _lastUpdateTime = Time.realtimeSinceStartup;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (_reqQueue.Count &gt; <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> req = _reqQueue.Dequeue();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 加载和实例化</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (busy) <span class="comment">// 超过实例化的时间则分帧处理</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h2><p>举个简单的例子，这是一个宝箱的Animator</p>
-<p><img src="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/1.png" alt="简单例子"></p>
-<p>例子中的Animator初始状态为<strong>idle</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Open</strong></font></span>则跳转到状态<strong>open</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>则跳转到状态<strong>Idle</strong>。</p>
-<p>由于Trigger是<strong>消耗型</strong>参数，所以参数只有在使用后才会发生重置。所以以下的两种写法最后都会得到相同的结果。</p>
+<p>上面的算法虽然可以实现基本的分帧需求，但问题也很明显：</p>
+<p>1）单个资源的加载和实例化的耗时可能仍较大时会产生尖峰</p>
+<p>2）单个资源的加载耗时已经较大时会产生尖峰</p>
+<p>第一个问题比较好解决，可以进一步优化，为单个资源的请求维护一个状态，未加载/加载/实例化/已加载，在加载与实例化之前加多一步满载检测，满载则跳出循环，下一帧再继续处理</p>
+<p>第二个问题其实是第一个问题的恶化结果，常见于场景加载，我们的处理方式是将场景资源分块导出成预制体，运行时再分块加载。这里有一个需要注意的点，<font color="#FF0000"><strong>需要确保场景在分拆为预制体后烘焙结果不受影响</strong></font>。我们用的是<a href="https://assetstore.unity.com/packages/tools/level-design/bakery-gpu-lightmapper-122218?locale=zh-CN">Bakery</a>来做场景烘焙，烘焙后的结果可能存在对GameObject或Component的实例依赖（如下图），这种情况下做分拆会导致烘焙结果失效，这种情况的一个解决方法是将烘焙后的结果和依赖的实例打成一个预设。</p>
+<p><img src="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/1.png" alt="1"></p>
 <ul>
-<li>写法一</li>
+<li><strong>业务层场景配置的彻底分块</strong></li>
 </ul>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br></pre></td></tr></table></figure>
-
+<p>战斗场景中除了有基本的场景资源外，经常伴随着刷怪，刷关卡物件等场景配置类需求，需要将对应的配置资源进行彻底分块，比如怪物A和物件A隶属于分块A等，加载分块A时将怪物A和物件A进行预加载，将配置资源的彻底分块有利于减少内存和CPU的浪费。</p>
 <ul>
-<li>写法二</li>
+<li><strong>业务层的分帧加载</strong></li>
 </ul>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>原因是方法二设置<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器后并没有发生消耗，等到切换到open状态后才开始判断，消耗<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器，跳转到<strong>idle</strong>状态，得到和方法一一致的效果。</p>
-]]></content>
+<p>业务层除了资源的加载外，各个项目可能还有其他许多需要处理的逻辑，比如我们项目中使用了帧同步，需要创建相应的逻辑层和显示层，我们还将部分较为耗时的Component在导出资源时进行隐藏，加载后进行分帧激活，等等的逻辑，也需要做分帧处理。</p>
+<h2 id="其他优化"><a href="#其他优化" class="headerlink" title="其他优化"></a><font color="#64EBC1">其他优化</font></h2><ul>
+<li>组件分帧加载</li>
+</ul>
+<p>部分Component的启动生命周期耗时较高但激活顺序对结果没有影响时，可以将Component或GameObject在场景加载后，进行延迟分帧激活</p>
+<h4 id="这就是我们中等地图的分块加载思路，欢迎指点和探讨"><a href="#这就是我们中等地图的分块加载思路，欢迎指点和探讨" class="headerlink" title="这就是我们中等地图的分块加载思路，欢迎指点和探讨~"></a>这就是我们中等地图的分块加载思路，欢迎指点和探讨~</h4>]]></content>
       <categories>
         <category>Unity</category>
-        <category>Animator</category>
+        <category>资源加载</category>
       </categories>
       <tags>
         <tag>Unity</tag>
-        <tag>Animator</tag>
-        <tag>Trigger</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>三大物理引擎之Bullet</title>
-    <url>/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/</url>
-    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
-<p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
-<span id="more"></span>
-
-<h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然Unity用的是<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p>
-<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="学习Bullet的什么？"><a href="#学习Bullet的什么？" class="headerlink" title="学习Bullet的什么？"></a>学习Bullet的什么？</h3><ol>
-<li><p>通用形状的碰撞体实现</p>
-</li>
-<li><p>碰撞检测实现</p>
-</li>
-<li><p>刚体实现</p>
-</li>
-<li><p>柔体实现</p>
-</li>
-<li><p>IK实现</p>
-</li>
-<li><p>优化手段</p>
-<p> ……</p>
-</li>
-</ol>
-<h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><h3 id="如何进行Bullet学习？"><a href="#如何进行Bullet学习？" class="headerlink" title="如何进行Bullet学习？"></a>如何进行Bullet学习？</h3><ol>
-<li>文档和资料</li>
-</ol>
-<ul>
-<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/BulletQuickstart.pdf">快速使用文档</a></p>
-</li>
-<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/Bullet_User_Manual.pdf">用户手册</a> </p>
-<ul>
-<li><a href="/2021/10/31/Bullet%E6%96%87%E6%A1%A3%E4%B9%8B%E3%80%8ABullet-User-Manual%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="《Bullet-User-Manual》阅读笔记">《Bullet-User-Manual》阅读笔记</a></li>
-</ul>
-</li>
-</ul>
-<ol start="2">
-<li>Demo</li>
-</ol>
-<ul>
-<li><p><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">BulletPhysicsForUnity</a></p>
-<p>这是一个Unity版的Bullet插件，有<a href="https://github.com/Phong13/BulletSharpUnity3d">github</a>版本，插件里将大量的C++接口暴露到了C#层，所以可以学到很多Bullet的概念，以及基础功能的实现。另外里面的bullet的dll是使用另一个github工程<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>编译出来的，更底层的代码还是得看编译工程。</p>
-<ul>
-<li><a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" title="下载和安装">下载和安装</a></li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
-<p>bullet的github仓库，根据教程编译出vs工程，设置启动项目，运行VS即可看到demo工程。</p>
-<p><img src="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png"></p>
-</li>
-</ul>
-<ol start="3">
-<li>源码</li>
-</ol>
-<ul>
-<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
-<p>撸完1和2，对bullet的使用也大概有个底了，就可以直接撸源码了。</p>
-</li>
-</ul>
-<ol start="4">
-<li>参考资料</li>
-</ol>
-<ul>
-<li><a href="https://www.cnblogs.com/liangliangh/p/3576353.html">https://www.cnblogs.com/liangliangh/p/3576353.html</a></li>
-</ul>
-<p>未完待续 …</p>
-]]></content>
-      <categories>
-        <category>Physics</category>
-        <category>Unity</category>
-      </categories>
-      <tags>
-        <tag>Bullet Physics</tag>
-        <tag>Physics</tag>
-        <tag>Unity</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>游戏物理（一）基本概念</title>
-    <url>/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p><strong>只有牢固的基础才能攀登更高的山峰。</strong></p>
-<h2 id="定律"><a href="#定律" class="headerlink" title="定律"></a><font color="#64EBC1">定律</font></h2><h3 id="牛顿运动定律"><a href="#牛顿运动定律" class="headerlink" title="牛顿运动定律"></a>牛顿运动定律</h3><ol>
-<li><p>每个物体都保持<strong>静止或者匀速直线运动</strong>的状态，除非有外力作用于它迫使它改变状态。</p>
-</li>
-<li><p>运动的变化正比于外力，变化的方向沿外力作用的直线方向。</p>
-</li>
-<li><p>每一个作用都有一个相等的反作用，两个物体的相互作用总是相等的。</p>
-</li>
-</ol>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#64EBC1">基本概念</font></h2><ul>
-<li><h3 id="右手坐标系"><a href="#右手坐标系" class="headerlink" title="右手坐标系"></a>右手坐标系</h3><p>二维的坐标系统中，逆时针旋转为正方向</p>
-</li>
-<li></li>
-</ul>
-<h2 id="通用符号"><a href="#通用符号" class="headerlink" title="通用符号"></a><font color="#64EBC1">通用符号</font></h2><table>
-<thead>
-<tr>
-<th>物理量</th>
-<th>符号</th>
-<th>量纲</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>线性加速度</td>
-<td>A</td>
-<td>L/T^2^</td>
-</tr>
-<tr>
-<td>单元格</td>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-</tbody></table>
-<h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a><font color="#64EBC1">公式</font></h2><p>$F = ma$</p>
-<img src="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/file.png" width="100" height="35" alt="图片名称" align="left">
-
-]]></content>
-      <categories>
-        <category>physics</category>
-      </categories>
-      <tags>
-        <tag>physics</tag>
+        <tag>资源加载</tag>
+        <tag>大世界</tag>
+        <tag>分帧加载</tag>
       </tags>
   </entry>
   <entry>
@@ -373,61 +173,160 @@
       </tags>
   </entry>
   <entry>
-    <title>大地图的分块加载</title>
-    <url>/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/</url>
-    <content><![CDATA[<p>最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。</p>
-<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a><font color="#64EBC1">目的</font></h2><p>项目的框架用的是上一个项目的小地图实时竞技的框架，面对新项目的中等偏大的地图存在明显得不适应，包括loading过慢，运行时帧数过低等各种问题，需要引入新的地图加载策略来改善加载与运行时效率的问题。</p>
+    <title>Trigger的特点</title>
+    <url>/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="Trigger的特点"><a href="#Trigger的特点" class="headerlink" title="Trigger的特点"></a>Trigger的特点</h2><p>众所周知，Animator的Trigger和Bool的区别是，Trigger是一次性触发判断，触发后会自动重置，而Bool是持久性变量，所以使用Trigger图的就是自动重置的功能。</p>
 <span id="more"></span>
 
-<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a><font color="#64EBC1">方案</font></h2><p>定方案时参考了<a href="https://assetstore.unity.com/packages/tools/terrain/sectr-complete-2019-144433">SECTR COMPLETE</a>插件，也参考了网上的一些资料，SECTR COMPLETE插件主要还是针对地形，包括提供了地形分割工具以及依据分割后的分块加载案例，但是我们的场景是由模型搭建起来的而不是地形，加上我们的场景不仅是横向扩展，也是纵向扩展，有多层楼，所以不太适用。</p>
-<p>所以比较后还是选用了一个比较傻瓜化且容易实现的方案，即<strong>程序实现分块加载和配置机制 + 美术手动进行场景分割 + 策划手动配置加载卸载时机</strong>的方式，这种方案虽然看起来比较low，但胜在实现难度较低，可操作性强。</p>
-<h3 id="美术"><a href="#美术" class="headerlink" title="美术"></a>美术</h3><p>美术主要是将场景由单个场景分拆为多个场景，注意<strong>场景分布相对均匀且不穿帮</strong>，程序需要提供一个编辑器用于将分块场景进行加载和卸载，方便美术编辑。</p>
-<h3 id="策划"><a href="#策划" class="headerlink" title="策划"></a>策划</h3><p>策划需要配置每块场景的加载和卸载时机，这里有两个需要注意的点</p>
+<h2 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h2><p>举个简单的例子，这是一个宝箱的Animator</p>
+<p><img src="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/1.png" alt="简单例子"></p>
+<p>例子中的Animator初始状态为<strong>idle</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Open</strong></font></span>则跳转到状态<strong>open</strong>，设置触发器<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>则跳转到状态<strong>Idle</strong>。</p>
+<p>由于Trigger是<strong>消耗型</strong>参数，所以参数只有在使用后才会发生重置。所以以下的两种写法最后都会得到相同的结果。</p>
 <ul>
-<li><strong>提前制定可用于加载或卸载的时机</strong></li>
+<li>写法一</li>
 </ul>
-<p>加载时对CPU的占用会变高，需要程序提前和策划协商好加载时机，比如CG和视频播放，或者走过某些只需要玩家纯移动的过场等CPU相对空闲的时候</p>
-<ul>
-<li><strong>添加保底</strong></li>
-</ul>
-<p>我们在加载过程中在底层和应用层都用了分帧加载，存在走到某一块时资源还未准备好的情况，需要提供可配置的保底机制，最粗暴的是打开loading之类的，当然一般不会触发。注意开启loading时关闭分帧加载，将加载速度拉满。</p>
-<h3 id="程序"><a href="#程序" class="headerlink" title="程序"></a>程序</h3><p>程序的工作重点在于，如何保证实现<font color="#F46224"><strong>丝滑</strong></font>的分块加载和卸载。</p>
-<p>围绕这个重点，我们重点做了以下件事情</p>
-<ul>
-<li><strong>资源层的分帧加载</strong></li>
-</ul>
-<p>这是最为核心的一部分。因为如果不能实现丝滑的分帧加载，那对于策划来说不如把他们丢回loading去做，虽然慢，但是至少不影响过程中的体验。</p>
-<p>资源层的对象池这些就不赘述了，几乎是每个项目必备。在对象池的基础上，资源层的分帧加载集中在两块，一是<font color="#F46224"><strong>加载</strong></font>，二是<font color="#F46224"><strong>实例化</strong></font>。分帧加载的思路是，所有的加载请求用加载队列进行维护，每帧分配固定的时间进行加载和实例化，比如10ms，超过了则放到下一帧进行处理，核心代码也非常简单</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">Queue&lt;T&gt; _reqQueue = <span class="keyword">new</span> Queue&lt;T&gt;();</span><br><span class="line"><span class="built_in">float</span> _lastUpdateTime;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 是否满载</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="built_in">bool</span> busy =&gt; Time.realtimeSinceStartup - _lastUpdateTime &gt;= <span class="number">0.005f</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 每帧更新</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Update</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _lastUpdateTime = Time.realtimeSinceStartup;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (_reqQueue.Count &gt; <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> req = _reqQueue.Dequeue();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 加载和实例化</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (busy) <span class="comment">// 超过实例化的时间则分帧处理</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br></pre></td></tr></table></figure>
 
-<p>上面的算法虽然可以实现基本的分帧需求，但问题也很明显：</p>
-<p>1）单个资源的加载和实例化的耗时可能仍较大时会产生尖峰</p>
-<p>2）单个资源的加载耗时已经较大时会产生尖峰</p>
-<p>第一个问题比较好解决，可以进一步优化，为单个资源的请求维护一个状态，未加载/加载/实例化/已加载，在加载与实例化之前加多一步满载检测，满载则跳出循环，下一帧再继续处理</p>
-<p>第二个问题其实是第一个问题的恶化结果，常见于场景加载，我们的处理方式是将场景资源分块导出成预制体，运行时再分块加载。这里有一个需要注意的点，<font color="#FF0000"><strong>需要确保场景在分拆为预制体后烘焙结果不受影响</strong></font>。我们用的是<a href="https://assetstore.unity.com/packages/tools/level-design/bakery-gpu-lightmapper-122218?locale=zh-CN">Bakery</a>来做场景烘焙，烘焙后的结果可能存在对GameObject或Component的实例依赖（如下图），这种情况下做分拆会导致烘焙结果失效，这种情况的一个解决方法是将烘焙后的结果和依赖的实例打成一个预设。</p>
-<p><img src="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/1.png" alt="1"></p>
 <ul>
-<li><strong>业务层场景配置的彻底分块</strong></li>
+<li>写法二</li>
 </ul>
-<p>战斗场景中除了有基本的场景资源外，经常伴随着刷怪，刷关卡物件等场景配置类需求，需要将对应的配置资源进行彻底分块，比如怪物A和物件A隶属于分块A等，加载分块A时将怪物A和物件A进行预加载，将配置资源的彻底分块有利于减少内存和CPU的浪费。</p>
-<ul>
-<li><strong>业务层的分帧加载</strong></li>
-</ul>
-<p>业务层除了资源的加载外，各个项目可能还有其他许多需要处理的逻辑，比如我们项目中使用了帧同步，需要创建相应的逻辑层和显示层，我们还将部分较为耗时的Component在导出资源时进行隐藏，加载后进行分帧激活，等等的逻辑，也需要做分帧处理。</p>
-<h2 id="其他优化"><a href="#其他优化" class="headerlink" title="其他优化"></a><font color="#64EBC1">其他优化</font></h2><ul>
-<li>组件分帧加载</li>
-</ul>
-<p>部分Component的启动生命周期耗时较高但激活顺序对结果没有影响时，可以将Component或GameObject在场景加载后，进行延迟分帧激活</p>
-<h4 id="这就是我们中等地图的分块加载思路，欢迎指点和探讨"><a href="#这就是我们中等地图的分块加载思路，欢迎指点和探讨" class="headerlink" title="这就是我们中等地图的分块加载思路，欢迎指点和探讨~"></a>这就是我们中等地图的分块加载思路，欢迎指点和探讨~</h4>]]></content>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">animator.SetTrigger(<span class="string">&quot;Idle&quot;</span>);</span><br><span class="line">animator.SetTrigger(<span class="string">&quot;Open&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>原因是方法二设置<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器后并没有发生消耗，等到切换到open状态后才开始判断，消耗<span style="background-color: #F9F2F4;"><font color="#CE3858"><strong>Idle</strong></font></span>触发器，跳转到<strong>idle</strong>状态，得到和方法一一致的效果。</p>
+]]></content>
       <categories>
         <category>Unity</category>
-        <category>资源加载</category>
+        <category>Animator</category>
       </categories>
       <tags>
         <tag>Unity</tag>
-        <tag>资源加载</tag>
-        <tag>分帧加载</tag>
-        <tag>大世界</tag>
+        <tag>Animator</tag>
+        <tag>Trigger</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>游戏物理（一）基本概念</title>
+    <url>/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p><strong>只有牢固的基础才能攀登更高的山峰。</strong></p>
+<h2 id="定律"><a href="#定律" class="headerlink" title="定律"></a><font color="#64EBC1">定律</font></h2><h3 id="牛顿运动定律"><a href="#牛顿运动定律" class="headerlink" title="牛顿运动定律"></a>牛顿运动定律</h3><ol>
+<li><p>每个物体都保持<strong>静止或者匀速直线运动</strong>的状态，除非有外力作用于它迫使它改变状态。</p>
+</li>
+<li><p>运动的变化正比于外力，变化的方向沿外力作用的直线方向。</p>
+</li>
+<li><p>每一个作用都有一个相等的反作用，两个物体的相互作用总是相等的。</p>
+</li>
+</ol>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#64EBC1">基本概念</font></h2><ul>
+<li><h3 id="右手坐标系"><a href="#右手坐标系" class="headerlink" title="右手坐标系"></a>右手坐标系</h3><p>二维的坐标系统中，逆时针旋转为正方向</p>
+</li>
+<li></li>
+</ul>
+<h2 id="通用符号"><a href="#通用符号" class="headerlink" title="通用符号"></a><font color="#64EBC1">通用符号</font></h2><table>
+<thead>
+<tr>
+<th>物理量</th>
+<th>符号</th>
+<th>量纲</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>线性加速度</td>
+<td>A</td>
+<td>L/T^2^</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+</tbody></table>
+<h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a><font color="#64EBC1">公式</font></h2><p>$F = ma$</p>
+<img src="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/file.png" width="100" height="35" alt="图片名称" align="left">
+
+]]></content>
+      <categories>
+        <category>physics</category>
+      </categories>
+      <tags>
+        <tag>physics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>三大物理引擎之Bullet</title>
+    <url>/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/</url>
+    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
+<p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
+<span id="more"></span>
+
+<h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然Unity用的是<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p>
+<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="学习Bullet的什么？"><a href="#学习Bullet的什么？" class="headerlink" title="学习Bullet的什么？"></a>学习Bullet的什么？</h3><ol>
+<li><p>通用形状的碰撞体实现</p>
+</li>
+<li><p>碰撞检测实现</p>
+</li>
+<li><p>刚体实现</p>
+</li>
+<li><p>柔体实现</p>
+</li>
+<li><p>IK实现</p>
+</li>
+<li><p>优化手段</p>
+<p> ……</p>
+</li>
+</ol>
+<h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><h3 id="如何进行Bullet学习？"><a href="#如何进行Bullet学习？" class="headerlink" title="如何进行Bullet学习？"></a>如何进行Bullet学习？</h3><ol>
+<li>文档和资料</li>
+</ol>
+<ul>
+<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/BulletQuickstart.pdf">快速使用文档</a></p>
+</li>
+<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/Bullet_User_Manual.pdf">用户手册</a> </p>
+<ul>
+<li><a href="/2021/10/31/Bullet%E6%96%87%E6%A1%A3%E4%B9%8B%E3%80%8ABullet-User-Manual%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="《Bullet-User-Manual》阅读笔记">《Bullet-User-Manual》阅读笔记</a></li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>Demo</li>
+</ol>
+<ul>
+<li><p><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">BulletPhysicsForUnity</a></p>
+<p>这是一个Unity版的Bullet插件，有<a href="https://github.com/Phong13/BulletSharpUnity3d">github</a>版本，插件里将大量的C++接口暴露到了C#层，所以可以学到很多Bullet的概念，以及基础功能的实现。另外里面的bullet的dll是使用另一个github工程<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>编译出来的，更底层的代码还是得看编译工程。</p>
+<ul>
+<li><a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" title="下载和安装">下载和安装</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
+<p>bullet的github仓库，根据教程编译出vs工程，设置启动项目，运行VS即可看到demo工程。</p>
+<p><img src="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png"></p>
+</li>
+</ul>
+<ol start="3">
+<li>源码</li>
+</ol>
+<ul>
+<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
+<p>撸完1和2，对bullet的使用也大概有个底了，就可以直接撸源码了。</p>
+</li>
+</ul>
+<ol start="4">
+<li>参考资料</li>
+</ol>
+<ul>
+<li><a href="https://www.cnblogs.com/liangliangh/p/3576353.html">https://www.cnblogs.com/liangliangh/p/3576353.html</a></li>
+</ul>
+<p>未完待续 …</p>
+]]></content>
+      <categories>
+        <category>Physics</category>
+        <category>Unity</category>
+      </categories>
+      <tags>
+        <tag>Bullet Physics</tag>
+        <tag>Physics</tag>
+        <tag>Unity</tag>
       </tags>
   </entry>
   <entry>
@@ -449,6 +348,107 @@
         <tag>Physics</tag>
         <tag>Unity</tag>
         <tag>Collider</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>开发装机环境</title>
+    <url>/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><p>写这样一个文档是因为电脑总会因为某些问题而面临重新安装开发环境，包括但不限于</p>
+<ul>
+<li>购置新机器</li>
+<li>重装系统</li>
+</ul>
+<p>有些所以需要记录下重装所需安装的软件和环境的设置。</p>
+<p>记录的内容主要是网址，部分没有官网的会以网盘的方式分享。考虑过都保存软件，但是可能会导致安装后的二次更新问题，维护成本也是个问题，所以还是选择网址。</p>
+<p>以下的记录只针对windows。另外我在想，是不是可以做个脚本一键装机？文章将持续更新</p>
+<span id="more"></span>
+
+<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><p><strong>引擎</strong></p>
+<ul>
+<li><p><a href="https://unity.cn/releases/full/2021">Unity</a></p>
+</li>
+<li><p><a href="https://developer.android.com/studio">Android Studio</a> </p>
+</li>
+<li><p><a href="https://developer.apple.com/xcode/resources/">Xcode</a> </p>
+</li>
+<li><p><a href="https://www.fairygui.com/">FairyGUI</a> （UI引擎）</p>
+</li>
+</ul>
+<p><strong>IDE</strong></p>
+<ul>
+<li><p><a href="https://visualstudio.microsoft.com/zh-hans/vs/">Visual Studio</a>（主力IDE，<font color="#ff0000"><strong>Unity+VS这两兄弟分分钟吃光你的内存，特别是当unity工程较大时，内存最好有24~32g</strong></font>，当然现在也有人开始迁往Rider）</p>
+</li>
+<li><p><a href="https://code.visualstudio.com/?wt.mc_id=vscom_downloads">Visual Studio Code</a></p>
+</li>
+<li><p><a href="https://www.sublimetext.com/3">Sublime3</a> </p>
+</li>
+</ul>
+<p><strong>Tools</strong></p>
+<ul>
+<li><p><a href="https://cmake.org/download/">Cmake</a>（起初是用来编译C++库，后面还用来做C#编dll）</p>
+</li>
+<li><p><a href="https://desktop.github.com/">Github Desktop</a></p>
+</li>
+<li><p><a href="https://git-scm.com/downloads">Git</a>（git命令行）</p>
+</li>
+<li><p><a href="https://tortoisegit.org/download/">TortoiseGit</a>（svn切换到git推荐，操作很接近，当然这两个工具的核心还是在于协作思想的不同）</p>
+</li>
+<li><p><a href="https://tortoisesvn.net/downloads.zh.html">TortoiseSVN</a></p>
+</li>
+</ul>
+<h3 id="日常"><a href="#日常" class="headerlink" title="日常"></a>日常</h3><p><strong>效率</strong></p>
+<ul>
+<li><p><a href="https://dida365.com/about/download">滴答清单</a>（会员有日周月的时间线功能）</p>
+</li>
+<li><p><a href="https://www.notion.so/desktop">Notion</a>（知识体系整理）</p>
+</li>
+<li><p><a href="https://www.listary.com/download">listary</a>（从策划那里“偷”来的工具，主要用来快速索引文件，比如配置表）</p>
+</li>
+<li><p><a href="https://cidian.youdao.com/index.html">有道词典</a></p>
+</li>
+</ul>
+<p><strong>浏览器</strong></p>
+<ul>
+<li><p><a href="https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B77CCCA8B-F59C-E570-E701-E2575690F29C%7D%26lang%3Dzh-CN%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe">Chrome</a></p>
+<ul>
+<li><p><a href="https://chrome.google.com/webstore/detail/sslspeedy/lmdbclggelcpbeoamojllkghfalbjeja">Chrome插件-sslspeedy</a>（vpn工具，需要配合<a href="https://1937o.com/main.php">vpnso账户</a>）</p>
+</li>
+<li><p><a href="https://chrome.google.com/webstore/detail/chrono-download-manager/mciiogijehkdemklbdcbfkefimifhecn?utm_source=chrome-ntp-icon">Chrome插件-下载管理器</a>（自带的没有断点续传功能）  </p>
+</li>
+<li><p><a href="https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?utm_source=chrome-ntp-icon">Chrome插件-google翻译</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>VPN</strong></p>
+<ul>
+<li><p><a href="https://1937o.com/main.php">vpnso</a>（vpn网站，用了6年了，稳定性高，看了下最新私人账号一年200，我买的时候100，后面续费也都是100，很良心，浏览网页看视频操作github仓库都问题不大。支持windows/chrome插件/android/ios）</p>
+</li>
+<li><p><a href="https://openvpn.net/community-downloads/">openvpn</a>（这个主要用来利用vpn远程办公，但是需要自己搭载环境，效果类似于向日葵Teamviewer等，但是不会被限速！同理也可以在家搭建NAS+DDNS，相当于一个家庭网盘，可在任何一个有网络的地方取用家里的资料，同样不会被限速，且资料安全，当然最好再自己搞下自动备份。）</p>
+</li>
+</ul>
+<p><strong>娱乐</strong></p>
+<ul>
+<li><p><a href="http://v.qq.com/download.html">腾讯视频</a>（豆瓣高分电影多）</p>
+</li>
+<li><p><a href="https://pd.youku.com/pc?spm=a2hpd.20022520.carousel.3!3~A">优酷视频</a>（TVB铁粉必备，但是现在的TVB是越来越没内味了）</p>
+</li>
+<li><p><a href="https://y.qq.com/download/download.html">QQ音乐</a></p>
+</li>
+<li><p><a href="https://music.163.com/#/download">网易云音乐</a></p>
+</li>
+</ul>
+<p><strong>社交</strong></p>
+<ul>
+<li><p><a href="https://tim.qq.com/download.html">TIM</a></p>
+</li>
+<li><p><a href="https://windows.weixin.qq.com/?lang=zh_CN">Wechat</a></p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>装机</tag>
+        <tag>开发环境</tag>
       </tags>
   </entry>
 </search>
