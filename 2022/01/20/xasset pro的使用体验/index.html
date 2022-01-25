@@ -20,28 +20,41 @@
     var CONFIG = {"hostname":"xtom0369.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="xtom&#39;s blog">
-<meta property="og:url" content="https://xtom0369.github.io/index.html">
+  <meta name="description" content="最近把项目的资源层换成了xasset团队版，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章又长又臭，但包含了实战过程中的经验，希望兄弟们看完应该可以避开一些坑。 目的上一篇大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xasset pro的使用体验">
+<meta property="og:url" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/index.html">
 <meta property="og:site_name" content="xtom&#39;s blog">
+<meta property="og:description" content="最近把项目的资源层换成了xasset团队版，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章又长又臭，但包含了实战过程中的经验，希望兄弟们看完应该可以避开一些坑。 目的上一篇大">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/%E4%BC%98%E7%82%B91.png">
+<meta property="og:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/%E4%BC%98%E7%82%B92.png">
+<meta property="og:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/Build%E5%92%8CGroup.png">
+<meta property="og:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/Group%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96.png">
+<meta property="article:published_time" content="2022-01-20T13:36:27.000Z">
+<meta property="article:modified_time" content="2022-01-25T14:05:57.434Z">
 <meta property="article:author" content="xtom">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="资源加载">
+<meta property="article:tag" content="分帧加载">
+<meta property="article:tag" content="xasset">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/%E4%BC%98%E7%82%B91.png">
 
-<link rel="canonical" href="https://xtom0369.github.io/">
+<link rel="canonical" href="https://xtom0369.github.io/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>xtom's blog</title>
+  <title>xasset pro的使用体验 | xtom's blog</title>
   
 
 
@@ -188,9 +201,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -206,10 +220,9 @@
       <meta itemprop="name" content="xtom's blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/20/xasset%20pro%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/" class="post-title-link" itemprop="url">xasset pro的使用体验</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          xasset pro的使用体验
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -273,7 +286,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近把项目的资源层换成了<a target="_blank" rel="noopener" href="https://www.xasset.pro/">xasset团队版</a>，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章又长又臭，但包含了实战过程中的经验，希望兄弟们看完应该可以避开一些坑。</p>
+        <p>最近把项目的资源层换成了<a target="_blank" rel="noopener" href="https://www.xasset.pro/">xasset团队版</a>，有收获，也有低于预期的地方，下面我会把他的核心功能一一列举，并详细描述体验和遇到的问题。总的来说瑕不掩瑜，作为一个3000块的产品，还是值得的，产品确实有打磨过的痕迹，代码多次精简之后，阅读性和可维护性较强。下面我重点写他的使用体验，操作层面直接看文档或者看源码即可。文章又长又臭，但包含了实战过程中的经验，希望兄弟们看完应该可以避开一些坑。</p>
 <h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a><font color="#64EBC1">目的</font></h2><p>上一篇<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/458672730">大地图分块加载</a>的文章里有提到，当时我们有了一个<strong>流畅分帧加载</strong>的需求，我们之前的项目主要是分量加载，比如最多同时加载10的资源，这种设计的问题我在上一篇文章也提到了，加载10个10M的资源和10个10k的资源是不一样的事情，没办法实现平滑加载，而分帧加载是xasset pro的宣传点之一。</p>
 <p>其次是分包和边玩边下的功能，这个功能只是用demo简单玩了下和粗略过了一下源码，还没深入使用，以后用了再回来补充吧。但是和专门做这块的快乐变化公司的边玩边下（用过），价格相比绝对是碾压，其次那种全套源码在手做扩展做定制化真的很爽，特别是代码可阅读性较高的时候。</p>
 <p>所以综合考虑下购买了团队版服务。</p>
@@ -371,684 +384,43 @@
 <p>如果感兴趣的人多的话我再针对性试用一下~</p>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a><font color="#64EBC1">结语</font></h2><p>我这样的“鸡蛋里挑骨头”总是很简单的事情，难的是xasset这种从0到1，总结开发经验，梳理开发需求，从而实现一个相对通用的模块。特别是在unity这种只提供基础底层和一堆未经过商业化考验的package和插件的引擎下，各个模块的进一步封装的需求还是很强烈的，对于大部分中小型游戏公司来说尤其如此。</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/Unity/" rel="tag"># Unity</a>
+              <a href="/tags/%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD/" rel="tag"># 资源加载</a>
+              <a href="/tags/%E5%88%86%E5%B8%A7%E5%8A%A0%E8%BD%BD/" rel="tag"># 分帧加载</a>
+              <a href="/tags/xasset/" rel="tag"># xasset</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="xtom">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xtom's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/" class="post-title-link" itemprop="url">大地图的分块加载</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-16 14:37:38" itemprop="dateCreated datePublished" datetime="2022-01-16T14:37:38+08:00">2022-01-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-17 22:13:19" itemprop="dateModified" datetime="2022-01-17T22:13:19+08:00">2022-01-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD/" itemprop="url" rel="index"><span itemprop="name">资源加载</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/" class="post-meta-item leancloud_visitors" data-flag-title="大地图的分块加载" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。</p>
-<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a><font color="#64EBC1">目的</font></h2><p>项目的框架用的是上一个项目的小地图实时竞技的框架，面对新项目的中等偏大的地图存在明显得不适应，包括loading过慢，运行时帧数过低等各种问题，需要引入新的地图加载策略来改善加载与运行时效率的问题。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="xtom">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xtom's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" class="post-title-link" itemprop="url">游戏物理（一）基本概念</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-08 21:38:36" itemprop="dateCreated datePublished" datetime="2021-12-08T21:38:36+08:00">2021-12-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-09 22:05:41" itemprop="dateModified" datetime="2021-12-09T22:05:41+08:00">2021-12-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/physics/" itemprop="url" rel="index"><span itemprop="name">physics</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" class="post-meta-item leancloud_visitors" data-flag-title="游戏物理（一）基本概念" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p><strong>只有牢固的基础才能攀登更高的山峰。</strong></p>
-<h2 id="定律"><a href="#定律" class="headerlink" title="定律"></a><font color="#64EBC1">定律</font></h2><h3 id="牛顿运动定律"><a href="#牛顿运动定律" class="headerlink" title="牛顿运动定律"></a>牛顿运动定律</h3><ol>
-<li><p>每个物体都保持<strong>静止或者匀速直线运动</strong>的状态，除非有外力作用于它迫使它改变状态。</p>
-</li>
-<li><p>运动的变化正比于外力，变化的方向沿外力作用的直线方向。</p>
-</li>
-<li><p>每一个作用都有一个相等的反作用，两个物体的相互作用总是相等的。</p>
-</li>
-</ol>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#64EBC1">基本概念</font></h2><ul>
-<li><h3 id="右手坐标系"><a href="#右手坐标系" class="headerlink" title="右手坐标系"></a>右手坐标系</h3><p>二维的坐标系统中，逆时针旋转为正方向</p>
-</li>
-<li></li>
-</ul>
-<h2 id="通用符号"><a href="#通用符号" class="headerlink" title="通用符号"></a><font color="#64EBC1">通用符号</font></h2><table>
-<thead>
-<tr>
-<th>物理量</th>
-<th>符号</th>
-<th>量纲</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>线性加速度</td>
-<td>A</td>
-<td>L/T^2^</td>
-</tr>
-<tr>
-<td>单元格</td>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-</tbody></table>
-<h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a><font color="#64EBC1">公式</font></h2><p>$F = ma$</p>
-<img src="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/file.png" width="100" height="35" alt="图片名称" align="left">
 
 
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="xtom">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xtom's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/" class="post-title-link" itemprop="url">Unity的Collider参数需要注意的点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-11-20 23:42:16" itemprop="dateCreated datePublished" datetime="2021-11-20T23:42:16+08:00">2021-11-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-16 13:43:56" itemprop="dateModified" datetime="2022-01-16T13:43:56+08:00">2022-01-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Physics/" itemprop="url" rel="index"><span itemprop="name">Physics</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Physics/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Physics/Unity/Bullet-Physics/" itemprop="url" rel="index"><span itemprop="name">Bullet Physics</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/" class="post-meta-item leancloud_visitors" data-flag-title="Unity的Collider参数需要注意的点" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p>问题的起因是项目中物理引擎的效果和运行时不一致，出现了一些虚空阻挡，或者碰撞效果异常，最后查到是对Collider组件中center等参数理解有偏差，<font color="#F46224">部分参数的配置需要叠加GameObject的rotation和scale的效果才是最终的结果</font>。</p>
-<h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a><font color="#64EBC1">详解</font></h2><p>由于物理引擎用的是Bullet，以BoxCollider为例，</p>
-<p><img src="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/BoxCollider.png" alt="BoxCollider"></p>
-<p>Bullet底层只认transform和boxHalfExtents（boxHalfExtents为size的一半），并没有center的概念，所以需要把center叠加到position上，以及把size换算为boxHalfExtents后传递给Bullet。</p>
-<p>这里有个需要注意的点是，center和size都是给予BoxCollider所在的GameObject的局部设置，所以center和size的换算需要叠加GameObject的rotation以及scale，代码如下。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> transform.position叠加了center后的世界坐标</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> Vector3 worldPosition =&gt; transform.position + Vector3.Scale(transform.rotation * center, transform.lossyScale);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Vector3 boxHalfExtents =&gt; Vector3.Scale(transform.rotation * size / <span class="number">2</span>, transform.lossyScale);</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="xtom">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xtom's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/" class="post-title-link" itemprop="url">三大物理引擎之Bullet</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-10-28 22:38:04" itemprop="dateCreated datePublished" datetime="2021-10-28T22:38:04+08:00">2021-10-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-07 22:32:18" itemprop="dateModified" datetime="2021-11-07T22:32:18+08:00">2021-11-07</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Physics/" itemprop="url" rel="index"><span itemprop="name">Physics</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Physics/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/" class="post-meta-item leancloud_visitors" data-flag-title="三大物理引擎之Bullet" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
-<p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/" rel="prev" title="大地图的分块加载">
+      <i class="fa fa-chevron-left"></i> 大地图的分块加载
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="xtom">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xtom's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/" class="post-title-link" itemprop="url">Trigger的特点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-10-26 23:23:44" itemprop="dateCreated datePublished" datetime="2021-10-26T23:23:44+08:00">2021-10-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-28 10:38:04" itemprop="dateModified" datetime="2021-10-28T10:38:04+08:00">2021-10-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/Animator/" itemprop="url" rel="index"><span itemprop="name">Animator</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/" class="post-meta-item leancloud_visitors" data-flag-title="Trigger的特点" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Trigger的特点"><a href="#Trigger的特点" class="headerlink" title="Trigger的特点"></a>Trigger的特点</h2><p>众所周知，Animator的Trigger和Bool的区别是，Trigger是一次性触发判断，触发后会自动重置，而Bool是持久性变量，所以使用Trigger图的就是自动重置的功能。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/26/Trigger%E7%9A%84%E7%89%B9%E7%82%B9/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xtom0369.github.io/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="xtom">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xtom's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/" class="post-title-link" itemprop="url">开发装机环境</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-10-19 13:18:34" itemprop="dateCreated datePublished" datetime="2021-10-19T13:18:34+08:00">2021-10-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-28 22:28:03" itemprop="dateModified" datetime="2021-10-28T22:28:03+08:00">2021-10-28</time>
-              </span>
-
-          
-            <span id="/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/" class="post-meta-item leancloud_visitors" data-flag-title="开发装机环境" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><p>写这样一个文档是因为电脑总会因为某些问题而面临重新安装开发环境，包括但不限于</p>
-<ul>
-<li>购置新机器</li>
-<li>重装系统</li>
-</ul>
-<p>有些所以需要记录下重装所需安装的软件和环境的设置。</p>
-<p>记录的内容主要是网址，部分没有官网的会以网盘的方式分享。考虑过都保存软件，但是可能会导致安装后的二次更新问题，维护成本也是个问题，所以还是选择网址。</p>
-<p>以下的记录只针对windows。另外我在想，是不是可以做个脚本一键装机？文章将持续更新</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -1095,6 +467,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">核心功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD"><span class="nav-number">3.</span> <span class="nav-text">其他功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">其他问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%88%B9%E6%96%B0%E7%89%88%E6%9C%AC"><span class="nav-number">5.</span> <span class="nav-text">船新版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">6.</span> <span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
