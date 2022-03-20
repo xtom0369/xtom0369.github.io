@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Unity的Collider参数需要注意的点</title>
+    <url>/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p>问题的起因是项目中物理引擎的效果和运行时不一致，出现了一些虚空阻挡，或者碰撞效果异常，最后查到是对Collider组件中center等参数理解有偏差，<font color="#F46224">部分参数的配置需要叠加GameObject的rotation和scale的效果才是最终的结果</font>。</p>
+<h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a><font color="#64EBC1">详解</font></h2><p>由于物理引擎用的是Bullet，以BoxCollider为例，</p>
+<p><img src="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/BoxCollider.png" alt="BoxCollider"></p>
+<p>Bullet底层只认transform和boxHalfExtents（boxHalfExtents为size的一半），并没有center的概念，所以需要把center叠加到position上，以及把size换算为boxHalfExtents后传递给Bullet。</p>
+<p>这里有个需要注意的点是，center和size都是给予BoxCollider所在的GameObject的局部设置，所以center和size的换算需要叠加GameObject的rotation以及scale，代码如下。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> transform.position叠加了center后的世界坐标</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> Vector3 worldPosition =&gt; transform.position + Vector3.Scale(transform.rotation * center, transform.lossyScale);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Vector3 boxHalfExtents =&gt; Vector3.Scale(transform.rotation * size / <span class="number">2</span>, transform.lossyScale);</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Physics</category>
+        <category>Unity</category>
+        <category>Bullet Physics</category>
+      </categories>
+      <tags>
+        <tag>Bullet Physics</tag>
+        <tag>Physics</tag>
+        <tag>Unity</tag>
+        <tag>Collider</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>开发装机环境</title>
     <url>/2021/10/19/%E5%BC%80%E5%8F%91%E8%A3%85%E6%9C%BA%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><p>写这样一个文档是因为电脑总会因为某些问题而面临重新安装开发环境，包括但不限于</p>
@@ -134,6 +155,131 @@
       </tags>
   </entry>
   <entry>
+    <title>游戏物理（一）基本概念</title>
+    <url>/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p><strong>只有牢固的基础才能攀登更高的山峰。</strong></p>
+<h2 id="定律"><a href="#定律" class="headerlink" title="定律"></a><font color="#64EBC1">定律</font></h2><h3 id="牛顿运动定律"><a href="#牛顿运动定律" class="headerlink" title="牛顿运动定律"></a>牛顿运动定律</h3><ol>
+<li><p>每个物体都保持<strong>静止或者匀速直线运动</strong>的状态，除非有外力作用于它迫使它改变状态。</p>
+</li>
+<li><p>运动的变化正比于外力，变化的方向沿外力作用的直线方向。</p>
+</li>
+<li><p>每一个作用都有一个相等的反作用，两个物体的相互作用总是相等的。</p>
+</li>
+</ol>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#64EBC1">基本概念</font></h2><ul>
+<li><h3 id="右手坐标系"><a href="#右手坐标系" class="headerlink" title="右手坐标系"></a>右手坐标系</h3><p>二维的坐标系统中，逆时针旋转为正方向</p>
+</li>
+<li></li>
+</ul>
+<h2 id="通用符号"><a href="#通用符号" class="headerlink" title="通用符号"></a><font color="#64EBC1">通用符号</font></h2><table>
+<thead>
+<tr>
+<th>物理量</th>
+<th>符号</th>
+<th>量纲</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>线性加速度</td>
+<td>A</td>
+<td>L/T^2^</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+</tbody></table>
+<h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a><font color="#64EBC1">公式</font></h2><p>$F = ma$</p>
+<img src="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/file.png" width="100" height="35" alt="图片名称" align="left">
+
+]]></content>
+      <categories>
+        <category>physics</category>
+      </categories>
+      <tags>
+        <tag>physics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>三大物理引擎之Bullet</title>
+    <url>/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/</url>
+    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
+<p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
+<span id="more"></span>
+
+<h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然Unity用的是<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p>
+<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="学习Bullet的什么？"><a href="#学习Bullet的什么？" class="headerlink" title="学习Bullet的什么？"></a>学习Bullet的什么？</h3><ol>
+<li><p>通用形状的碰撞体实现</p>
+</li>
+<li><p>碰撞检测实现</p>
+</li>
+<li><p>刚体实现</p>
+</li>
+<li><p>柔体实现</p>
+</li>
+<li><p>IK实现</p>
+</li>
+<li><p>优化手段</p>
+<p> ……</p>
+</li>
+</ol>
+<h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><h3 id="如何进行Bullet学习？"><a href="#如何进行Bullet学习？" class="headerlink" title="如何进行Bullet学习？"></a>如何进行Bullet学习？</h3><ol>
+<li>文档和资料</li>
+</ol>
+<ul>
+<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/BulletQuickstart.pdf">快速使用文档</a></p>
+</li>
+<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/Bullet_User_Manual.pdf">用户手册</a> </p>
+<ul>
+<li><a href="/2021/10/31/Bullet%E6%96%87%E6%A1%A3%E4%B9%8B%E3%80%8ABullet-User-Manual%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="《Bullet-User-Manual》阅读笔记">《Bullet-User-Manual》阅读笔记</a></li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>Demo</li>
+</ol>
+<ul>
+<li><p><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">BulletPhysicsForUnity</a></p>
+<p>这是一个Unity版的Bullet插件，有<a href="https://github.com/Phong13/BulletSharpUnity3d">github</a>版本，插件里将大量的C++接口暴露到了C#层，所以可以学到很多Bullet的概念，以及基础功能的实现。另外里面的bullet的dll是使用另一个github工程<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>编译出来的，更底层的代码还是得看编译工程。</p>
+<ul>
+<li><a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" title="下载和安装">下载和安装</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
+<p>bullet的github仓库，根据教程编译出vs工程，设置启动项目，运行VS即可看到demo工程。</p>
+<p><img src="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png"></p>
+</li>
+</ul>
+<ol start="3">
+<li>源码</li>
+</ol>
+<ul>
+<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
+<p>撸完1和2，对bullet的使用也大概有个底了，就可以直接撸源码了。</p>
+</li>
+</ul>
+<ol start="4">
+<li>参考资料</li>
+</ol>
+<ul>
+<li><a href="https://www.cnblogs.com/liangliangh/p/3576353.html">https://www.cnblogs.com/liangliangh/p/3576353.html</a></li>
+</ul>
+<p>未完待续 …</p>
+]]></content>
+      <categories>
+        <category>Physics</category>
+        <category>Unity</category>
+      </categories>
+      <tags>
+        <tag>Bullet Physics</tag>
+        <tag>Physics</tag>
+        <tag>Unity</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>大地图的分块加载</title>
     <url>/2022/01/16/%E5%A4%A7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD/</url>
     <content><![CDATA[<p>最近一段时间在项目上新增了大地图的分块加载的机制，踩了很多坑，记录一下经历，分享之余，也希望能和大家共同探讨优化的方向。</p>
@@ -189,27 +335,6 @@
         <tag>资源加载</tag>
         <tag>大世界</tag>
         <tag>分帧加载</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Unity的Collider参数需要注意的点</title>
-    <url>/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p>问题的起因是项目中物理引擎的效果和运行时不一致，出现了一些虚空阻挡，或者碰撞效果异常，最后查到是对Collider组件中center等参数理解有偏差，<font color="#F46224">部分参数的配置需要叠加GameObject的rotation和scale的效果才是最终的结果</font>。</p>
-<h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a><font color="#64EBC1">详解</font></h2><p>由于物理引擎用的是Bullet，以BoxCollider为例，</p>
-<p><img src="/2021/11/20/Unity%E7%9A%84Collider%E5%8F%82%E6%95%B0%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9/BoxCollider.png" alt="BoxCollider"></p>
-<p>Bullet底层只认transform和boxHalfExtents（boxHalfExtents为size的一半），并没有center的概念，所以需要把center叠加到position上，以及把size换算为boxHalfExtents后传递给Bullet。</p>
-<p>这里有个需要注意的点是，center和size都是给予BoxCollider所在的GameObject的局部设置，所以center和size的换算需要叠加GameObject的rotation以及scale，代码如下。</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> transform.position叠加了center后的世界坐标</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> Vector3 worldPosition =&gt; transform.position + Vector3.Scale(transform.rotation * center, transform.lossyScale);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Vector3 boxHalfExtents =&gt; Vector3.Scale(transform.rotation * size / <span class="number">2</span>, transform.lossyScale);</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Physics</category>
-        <category>Unity</category>
-        <category>Bullet Physics</category>
-      </categories>
-      <tags>
-        <tag>Unity</tag>
-        <tag>Bullet Physics</tag>
-        <tag>Physics</tag>
-        <tag>Collider</tag>
       </tags>
   </entry>
   <entry>
@@ -324,131 +449,6 @@
         <tag>资源加载</tag>
         <tag>分帧加载</tag>
         <tag>xasset</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>三大物理引擎之Bullet</title>
-    <url>/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/</url>
-    <content><![CDATA[<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a><font color="#64EBC1">Why</font></h2><h3 id="为什么要引入物理引擎？"><a href="#为什么要引入物理引擎？" class="headerlink" title="为什么要引入物理引擎？"></a>为什么要引入物理引擎？</h3><p>常见的需求是<font color="#F46224">网络同步</font>。</p>
-<p>当下通用的网络同步方案有<font color="#F46224">帧同步</font>和<font color="#F46224">状态同步</font>。状态同步自然是要在服务器跑物理，帧同步本来可以只跑客户端，服务器只负责转发命令（事实上我们上一个帧同步游戏也是这么做的），但是存在两个问题，一是不同平台存在不同步的可能，因为引擎的物理引擎存在浮点运算，不同平台可能运算结果不一致（这个问题我们使用了截断三位小数后面的方法，不同步出现的概率大大地降低了）；二是只跑客户端无法较好地做校验或者防作弊。</p>
-<span id="more"></span>
-
-<h3 id="为什么是Bullet？"><a href="#为什么是Bullet？" class="headerlink" title="为什么是Bullet？"></a>为什么是Bullet？</h3><p>主要是项目接入的是Bullet，有一定的使用经验，另外Bullet的优点是项目结构相对简单，接入方便。当然Unity用的是<a href="https://developer.nvidia.com/physx-sdk">PhyX</a>，后续有机会也会开PhyX的坑。</p>
-<h2 id="What"><a href="#What" class="headerlink" title="What"></a><font color="#64EBC1">What</font></h2><h3 id="学习Bullet的什么？"><a href="#学习Bullet的什么？" class="headerlink" title="学习Bullet的什么？"></a>学习Bullet的什么？</h3><ol>
-<li><p>通用形状的碰撞体实现</p>
-</li>
-<li><p>碰撞检测实现</p>
-</li>
-<li><p>刚体实现</p>
-</li>
-<li><p>柔体实现</p>
-</li>
-<li><p>IK实现</p>
-</li>
-<li><p>优化手段</p>
-<p> ……</p>
-</li>
-</ol>
-<h2 id="How"><a href="#How" class="headerlink" title="How"></a><font color="#64EBC1">How</font></h2><h3 id="如何进行Bullet学习？"><a href="#如何进行Bullet学习？" class="headerlink" title="如何进行Bullet学习？"></a>如何进行Bullet学习？</h3><ol>
-<li>文档和资料</li>
-</ol>
-<ul>
-<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/BulletQuickstart.pdf">快速使用文档</a></p>
-</li>
-<li><p><a href="https://github.com/bulletphysics/bullet3/blob/master/docs/Bullet_User_Manual.pdf">用户手册</a> </p>
-<ul>
-<li><a href="/2021/10/31/Bullet%E6%96%87%E6%A1%A3%E4%B9%8B%E3%80%8ABullet-User-Manual%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="《Bullet-User-Manual》阅读笔记">《Bullet-User-Manual》阅读笔记</a></li>
-</ul>
-</li>
-</ul>
-<ol start="2">
-<li>Demo</li>
-</ol>
-<ul>
-<li><p><a href="https://assetstore.unity.com/packages/tools/physics/bullet-physics-for-unity-62991?locale=zh-CN">BulletPhysicsForUnity</a></p>
-<p>这是一个Unity版的Bullet插件，有<a href="https://github.com/Phong13/BulletSharpUnity3d">github</a>版本，插件里将大量的C++接口暴露到了C#层，所以可以学到很多Bullet的概念，以及基础功能的实现。另外里面的bullet的dll是使用另一个github工程<a href="https://github.com/Phong13/BulletSharpPInvoke">BulletSharpPInvoke</a>编译出来的，更底层的代码还是得看编译工程。</p>
-<ul>
-<li><a href="/2021/10/31/BulletPhysicsForUnity%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85/" title="下载和安装">下载和安装</a></li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
-<p>bullet的github仓库，根据教程编译出vs工程，设置启动项目，运行VS即可看到demo工程。</p>
-<p><img src="/2021/10/28/%E4%B8%89%E5%A4%A7%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E4%B9%8BBullet/Demo.png"></p>
-</li>
-</ul>
-<ol start="3">
-<li>源码</li>
-</ol>
-<ul>
-<li><p><a href="https://github.com/bulletphysics/bullet3">bullet3</a></p>
-<p>撸完1和2，对bullet的使用也大概有个底了，就可以直接撸源码了。</p>
-</li>
-</ul>
-<ol start="4">
-<li>参考资料</li>
-</ol>
-<ul>
-<li><a href="https://www.cnblogs.com/liangliangh/p/3576353.html">https://www.cnblogs.com/liangliangh/p/3576353.html</a></li>
-</ul>
-<p>未完待续 …</p>
-]]></content>
-      <categories>
-        <category>Physics</category>
-        <category>Unity</category>
-      </categories>
-      <tags>
-        <tag>Unity</tag>
-        <tag>Bullet Physics</tag>
-        <tag>Physics</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>游戏物理（一）基本概念</title>
-    <url>/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><font color="#64EBC1">前言</font></h2><p><strong>只有牢固的基础才能攀登更高的山峰。</strong></p>
-<h2 id="定律"><a href="#定律" class="headerlink" title="定律"></a><font color="#64EBC1">定律</font></h2><h3 id="牛顿运动定律"><a href="#牛顿运动定律" class="headerlink" title="牛顿运动定律"></a>牛顿运动定律</h3><ol>
-<li><p>每个物体都保持<strong>静止或者匀速直线运动</strong>的状态，除非有外力作用于它迫使它改变状态。</p>
-</li>
-<li><p>运动的变化正比于外力，变化的方向沿外力作用的直线方向。</p>
-</li>
-<li><p>每一个作用都有一个相等的反作用，两个物体的相互作用总是相等的。</p>
-</li>
-</ol>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#64EBC1">基本概念</font></h2><ul>
-<li><h3 id="右手坐标系"><a href="#右手坐标系" class="headerlink" title="右手坐标系"></a>右手坐标系</h3><p>二维的坐标系统中，逆时针旋转为正方向</p>
-</li>
-<li></li>
-</ul>
-<h2 id="通用符号"><a href="#通用符号" class="headerlink" title="通用符号"></a><font color="#64EBC1">通用符号</font></h2><table>
-<thead>
-<tr>
-<th>物理量</th>
-<th>符号</th>
-<th>量纲</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>线性加速度</td>
-<td>A</td>
-<td>L/T^2^</td>
-</tr>
-<tr>
-<td>单元格</td>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-</tbody></table>
-<h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a><font color="#64EBC1">公式</font></h2><p>$F = ma$</p>
-<img src="/2021/12/08/%E6%B8%B8%E6%88%8F%E7%89%A9%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/file.png" width="100" height="35" alt="图片名称" align="left">
-
-]]></content>
-      <categories>
-        <category>physics</category>
-      </categories>
-      <tags>
-        <tag>physics</tag>
       </tags>
   </entry>
   <entry>
