@@ -6,7 +6,7 @@
   <link href="https://xtom0369.github.io/atom.xml" rel="self"/>
   
   <link href="https://xtom0369.github.io/"/>
-  <updated>2022-01-25T14:11:35.276Z</updated>
+  <updated>2022-03-20T07:32:26.871Z</updated>
   <id>https://xtom0369.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Unity配置表方案</title>
+    <link href="https://xtom0369.github.io/2022/02/13/Unity%E9%85%8D%E7%BD%AE%E8%A1%A8%E6%96%B9%E6%A1%88/"/>
+    <id>https://xtom0369.github.io/2022/02/13/Unity%E9%85%8D%E7%BD%AE%E8%A1%A8%E6%96%B9%E6%A1%88/</id>
+    <published>2022-02-13T14:41:30.000Z</published>
+    <updated>2022-03-20T07:32:26.871Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前语"><a href="#前语" class="headerlink" title="前语"></a><font color="#64EBC1">前语</font></h2><p>最近整理了一直在用的配置表方案，分享出来，供大家参考之余，也期待和大家一起探讨改进方案。</p><p>Github工程地址：<a href="https://github.com/xtom0369/XConfig">https://github.com/xtom0369/XConfig</a></p><p>Q群：975919763</p><span id="more"></span><h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a><font color="#64EBC1">特性</font></h2><ul><li><strong>csv =&gt; bytes</strong></li></ul><p>源文件格式选用了csv，csv相比excel可以方便地进行版本对比，发生冲突时也可以进行合并；二进制作为导出格式有较高的读写效率。</p><ul><li><strong>自动生成表解析代码</strong></li></ul><p>一键生成配置表解析代码，无需手撸解析代码。</p><ul><li><strong>基本数据类型</strong></li></ul><p>支持byte，bool，int，long，float，Vector2，Color，List等基础数据类型。</p><ul><li><strong>双主键</strong></li></ul><p>支持配置两个主键，比如英雄等级表需要英雄id和英雄level两个主键共同决定配置行。</p><ul><li><strong>表关联</strong></li></ul><p>支持不同配置表之间进行关联。</p><ul><li><strong>表继承</strong></li></ul><p>支持建立表继承关系，比如道具分多种类型的道具，通用道具字段放父表，不同道具的特殊字段放子表。</p><ul><li><strong>自定义类型</strong></li></ul><p>支持快速添加自定义数据类型，支持后自动支持List的泛型类型。</p><ul><li><strong>表/行的代码类扩展</strong></li></ul><p>支持在扩展类中对表/行的字段数据进行二次处理或组织。</p><ul><li><strong>热刷新</strong>：支持运行时刷新配置表；（当前只支持对已有字段进行修改，不支持增减行或列，避免影响运行时已引用的数据）</li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前语&quot;&gt;&lt;a href=&quot;#前语&quot; class=&quot;headerlink&quot; title=&quot;前语&quot;&gt;&lt;/a&gt;&lt;font color=&quot;#64EBC1&quot;&gt;前语&lt;/font&gt;&lt;/h2&gt;&lt;p&gt;最近整理了一直在用的配置表方案，分享出来，供大家参考之余，也期待和大家一起探讨改进方案。&lt;/p&gt;
+&lt;p&gt;Github工程地址：&lt;a href=&quot;https://github.com/xtom0369/XConfig&quot;&gt;https://github.com/xtom0369/XConfig&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Q群：975919763&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Unity" scheme="https://xtom0369.github.io/categories/Unity/"/>
+    
+    <category term="配置表" scheme="https://xtom0369.github.io/categories/Unity/%E9%85%8D%E7%BD%AE%E8%A1%A8/"/>
+    
+    
+    <category term="Unity" scheme="https://xtom0369.github.io/tags/Unity/"/>
+    
+    <category term="配置表" scheme="https://xtom0369.github.io/tags/%E9%85%8D%E7%BD%AE%E8%A1%A8/"/>
+    
+    <category term="csv" scheme="https://xtom0369.github.io/tags/csv/"/>
+    
+  </entry>
   
   <entry>
     <title>Unity资源层的封装之接入xasset pro</title>
