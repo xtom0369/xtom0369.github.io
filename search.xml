@@ -507,62 +507,43 @@
       </tags>
   </entry>
   <entry>
-    <title>2022年年度总结</title>
-    <url>/2022/03/26/2022%E5%B9%B4%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>GAMES101读书笔记</title>
-    <url>/2022/03/26/GAMES101%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<h2 id="GAMES101的读书笔记"><a href="#GAMES101的读书笔记" class="headerlink" title="GAMES101的读书笔记"></a>GAMES101的读书笔记</h2><p><a href="https://www.bilibili.com/video/BV1X7411F744?p=1">b站录播视频链接</a></p>
-<h3 id="Lecture-Note"><a href="#Lecture-Note" class="headerlink" title="Lecture Note"></a>Lecture Note</h3><p><a href="https://xtom0369.github.io/2022/03/26/GAMES101%20-%20Overview%20of%20Computer%20Graphics/">Lec 01 - Overview of Computer Graphics</a></p>
+    <title>魔幻的生活</title>
+    <url>/2022/04/10/%E9%AD%94%E5%B9%BB%E7%9A%84%E7%94%9F%E6%B4%BB/</url>
+    <content><![CDATA[<h2 id="生活"><a href="#生活" class="headerlink" title="生活"></a><font color="#64EBC1">生活</font></h2><p>广州的四月并不平静，继上海和深圳之后，广州的疫情局势也紧张了起来。更要命的是，就在广州疫情刚开始之际，微信里广泛流传着一篇《求救》的文章，讲述了上海人缺粮的问题，于是恐慌的情绪开始蔓延开来。</p>
+<p>其实我也受到了这篇文章的影响，看到文章的那晚回家路上，去超市买了一包米和一些面，第二天早上去农贸市场买了一些肉和蔬菜，思路是保证一个月的主食和半个月左右的鲜肉蔬菜，另外还让家里寄了一些可以放的冻品，这还是在完全得不到任何补给下的规划……</p>
+<p>看到市场大家疯狂地抢菜，深深地感受到，比起疫情，那种全民的恐慌更加地可怕。可能是因为，当代人从来没有经历过饥荒，也不敢去想象那种日子。</p>
+<h2 id="工作"><a href="#工作" class="headerlink" title="工作"></a><font color="#64EBC1">工作</font></h2><h3 id="配置表框架"><a href="#配置表框架" class="headerlink" title="配置表框架"></a>配置表框架</h3><p>工作上，今年一开年先整理了一下配置表框架<a href="https://github.com/xtom0369/XConfig">XConfig</a>，这是我一直在用的商用框架。</p>
+<p><img src="/2022/04/10/%E9%AD%94%E5%B9%BB%E7%9A%84%E7%94%9F%E6%B4%BB/file.png" alt="File"></p>
+<p>但是说实话，当前的框架还有一些需要改进的地方：</p>
+<ul>
+<li>csv还是excel？</li>
+</ul>
+<p>csv的优势是更好地进行版本回溯以及冲突处理，借助svn diff或者beyond compare的工具可以比较好地查看版本差异。但是缺点也非常明显，csv毕竟是纯数据，虽然用excel工具可以打开，但是实际上很多excel的特色功能并不能使用，比如公式，又比如excel的输入限制等。excel则反之，特色功能丰富，版本控制蛋疼。</p>
+<ul>
+<li>自定义类型的配置方式</li>
+</ul>
+<p>当前采用的是 <strong>#</strong> 号来分割字段，但这种方式其实比较呆板，并且阅读不方便，后续会考虑替换成{id=1001,count=10}这种方式。</p>
+<h3 id="图形学"><a href="#图形学" class="headerlink" title="图形学"></a>图形学</h3><p>图形学一直是我缺失比较多的一块，在完成配置表框架初版后就开始进行定点爆破，也开始有了一点小成效。</p>
+<p>我觉得图形学的学习的特点是：<strong>学习曲线陡</strong>。入门需要对渲染管线和线性代数有基础的了解，但也并非不可逾越。我不是很喜欢网上把图形学妖魔化的做法，这无疑给了初学者一些心理压力。对于大多数初学者来说图形学的入门需要通俗易懂的教程。</p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1X7411F744?p=1">GAMES101-现代计算机图形学入门-闫令琪</a></li>
+</ul>
+<p>建议一定要看闫令琪老师的教程，一是视频教程比较容易看得下去，视频本身也相对通俗易懂，另外这个教程的重点是图形学的基础，而不是各种图形API，这对初学者打好基础很有帮助。</p>
+<ul>
+<li><a href="https://book.douban.com/subject/26821639/">《Unity Shader入门精要》</a></li>
+</ul>
+<p>这本不用多说了，Unity Shader入学者基本人手一本，更偏向于Unity的实操层面。</p>
+<ul>
+<li><a href="https://catlikecoding.com/unity/tutorials/rendering/">Catlikecoding’s Unity Rendering Tutorials</a></li>
+</ul>
+<p>这个和入门精要有点像，但是更加地循序渐进一些，他会很细心地向你展示一个shader的演进过程，教学方法经常是 <strong>添加Shader的基本框架</strong> -&gt; <strong>想要加什么功能</strong> -&gt; <strong>添加功能</strong> -&gt; <strong>当前的实现还存在什么问题</strong> -&gt; <strong>修复还存在的问题</strong> -&gt; <strong>有哪些实现是Unity已经帮你封装好的</strong> -&gt; <strong>替换成Unity的内置方法</strong>，相比一上来就给你整个Shader对着讲解，他对初学者很友好。但是他是全英版本，不想看英文的可以看知乎上的<a href="https://zhuanlan.zhihu.com/p/137429554">中文版本</a>。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a><font color="#64EBC1">结语</font></h2><p>戒骄戒躁，享受过程~ </p>
 ]]></content>
       <categories>
-        <category>Unity</category>
-        <category>图形学</category>
-        <category>GAMES101</category>
+        <category>生活</category>
       </categories>
       <tags>
-        <tag>Unity</tag>
-        <tag>图形学</tag>
-        <tag>渲染</tag>
-        <tag>GAMES101</tag>
-        <tag>线性代数</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GAMES101 - Overview of Computer Graphics</title>
-    <url>/2022/03/26/GAMES101%20-%20Overview%20of%20Computer%20Graphics/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Unity</category>
-        <category>图形学</category>
-        <category>GAMES101</category>
-      </categories>
-      <tags>
-        <tag>Unity</tag>
-        <tag>图形学</tag>
-        <tag>渲染</tag>
-        <tag>GAMES101</tag>
-        <tag>线性代数</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>图形学学习资料</title>
-    <url>/2022/03/26/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/</url>
-    <content><![CDATA[<h2 id="前语"><a href="#前语" class="headerlink" title="前语"></a><font color="#64EBC1">前语</font></h2><p>这篇文章主要用于记录一些图形学的学习资料，且文章长期维护，主要包含对我的学习帮助比较大的文章。</p>
-<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a><font color="#64EBC1">基础</font></h2><p><a href="https://www.bilibili.com/video/BV1X7411F744">GAMES101-现代计算机图形学入门-闫令琪</a></p>
-<p>视频资源，主要讲图形学的基础知识和原理（不讲图形API或Unity Shader），深入浅出，非常适合入门。</p>
-<p><a href="https://catlikecoding.com/unity/tutorials/rendering/">catlikecoding</a></p>
-]]></content>
-      <categories>
-        <category>Unity</category>
-        <category>图形学</category>
-      </categories>
-      <tags>
-        <tag>Unity</tag>
-        <tag>图形学</tag>
-        <tag>渲染</tag>
+        <tag>随笔</tag>
       </tags>
   </entry>
 </search>
